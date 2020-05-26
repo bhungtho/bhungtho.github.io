@@ -37,10 +37,20 @@ body {
     text-align: left;
     padding-left: 300px;
     margin-bottom: 10px;
+    overflow: auto;
 }
 
 .content img {
+    /*max-width: 100%; */ 
+    /* height: 100%; */
+    display: inline-block;
+    /*height: auto;*/
+    /* margin: auto; */
     float: right;
-    margin-right: 300px;
-    margin-top: 30px;
+    /*object-fit: cover;*/
+    padding-right: 500px;
+    max-width: 300px;
+    max-height: 400px;
+    margin-top: 10px;
+    margin-bottom: 10px;
 }
