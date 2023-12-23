@@ -12,50 +12,42 @@
 		<link rel="stylesheet" href="assets/css/main.css" />
 	</head>
 	<body class="is-preload">
+		<script>
+			$(function(){
+				$("#header").load("header.html"); 
+			});
+		</script>
+		<div id="header"></div>
 
-		<!-- Header -->
-			<header id="header">
-				<div class="inner">
-					<a href="#" class="image avatar"><img src="pages/images/face.jpg" alt="" /></a>
-					<h1><strong>I'm Ben Hung</strong> <br/>Computer Engineering student</h1>
-					<br>
-					<h4><a href="https://github.com/bhungtho">GitHub</a></h4>
-					<h4><a href="https://www.linkedin.com/in/bhungtho/">LinkedIn</a></h4>
-					<h4><a href="documents/resume_summer2021.pdf">Resume</a></h4>
-					<h4><a href="pages/softwareprojects.html">Software Projects</a></h4>
-				</div>
-			</header>
+		<div id="main">
 
-		<!-- Main -->
-			<div id="main">
+			<!-- One -->
+				<section id="one">
+					<header class="major">
+						<h2>Welcome to my personal website!</h2>
+					</header>
+				</section>
 
-				<!-- One -->
-					<section id="one">
-						<header class="major">
-							<h2>Welcome to my personal website!</h2>
-						</header>
-					</section>
-
-				<!-- Two -->
-					<section id="two">
-						<h2>Work Experience</h2>
-							<h4>Software Development Engineer Intern @ Amazon (Summer 2020)</h4>
-							<p>Tech Stack: Kotlin, TypeScript, AWS (S3, CDK, Lambdas, IAM, Step Functions), React <br>
-								
-								During the summer of 2020, I worked as a SDE intern at Amazon within the SCOT team. 
-							   Here, I took part in building up an internal system that helps organize the transportation routes between Amazon's fulfillment and shipping centers.
-							   I also built and deployed UI elements that allows customers to view and configure new and existing routes.
-							</p>
-					</section>
-			</div>
+			<!-- Two -->
+				<section id="two">
+					<h2>Work Experience</h2>
+						<h4>Software Development Engineer Intern @ Amazon (Summer 2020)</h4>
+						<p>Tech Stack: Kotlin, TypeScript, AWS (S3, CDK, Lambdas, IAM, Step Functions), React <br>
+							
+							During the summer of 2020, I worked as a SDE intern at Amazon within the SCOT team. 
+							Here, I took part in building up an internal system that helps organize the transportation routes between Amazon's fulfillment and shipping centers.
+							I also built and deployed UI elements that allows customers to view and configure new and existing routes.
+						</p>
+				</section>
+		</div>
 
 		<!-- Scripts -->
-			<script src="assets/js/jquery.min.js"></script>
-			<script src="assets/js/jquery.poptrox.min.js"></script>
-			<script src="assets/js/browser.min.js"></script>
-			<script src="assets/js/breakpoints.min.js"></script>
-			<script src="assets/js/util.js"></script>
-			<script src="assets/js/main.js"></script>
+		<script src="assets/js/jquery.min.js"></script>
+		<script src="assets/js/jquery.poptrox.min.js"></script>
+		<script src="assets/js/browser.min.js"></script>
+		<script src="assets/js/breakpoints.min.js"></script>
+		<script src="assets/js/util.js"></script>
+		<script src="assets/js/main.js"></script>
 
 	</body>
 </html>
