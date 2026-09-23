@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>MTA Trip Heat Map</title>
+  <link href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" rel="stylesheet" />
+  <style>
+    * { box-sizing: border-box; }
+    html, body { margin: 0; height: 100%; font-family: -apple-system, "Helvetica Neue", sans-serif; }
+    #app { display: flex; height: 100%; }
+    #map { flex: 1; }
+    #panel {
+      width: 300px; padding: 16px; overflow-y: auto; flex-shrink: 0;
+      background: #16181d; color: #d7dae0; border-right: 1px solid #2a2d34;
+    }
+    #panel h1 { font-size: 16px; margin: 0 0 12px; color: #fff; }
+    #panel h2 { font-size: 12px; text-transform: uppercase; letter-spacing: 0.06em;
+                color: #8b919c; margin: 18px 0 6px; }
+    .stat-row { display: flex; justify-content: space-between; font-size: 13px; padding: 2px 0; }
+    .stat-row .value { color: #fff; font-variant-numeric: tabular-nums; }
+    label { font-size: 12px; color: #8b919c; display: block; margin-top: 8px; }
+    input[type="date"] {
+      width: 100%; margin-top: 2px; padding: 4px 6px; font-size: 13px;
+      background: #22252c; color: #d7dae0; border: 1px solid #2a2d34; border-radius: 4px;
+    }
+    #errors { font-size: 12px; }
+    #errors .err {
+      background: #3a2226; border: 1px solid #5c3138; border-radius: 4px;
+      padding: 6px 8px; margin-bottom: 6px; color: #f0b9be; word-break: break-word;
+    }
+    #errors .ok { color: #7dc98f; }
+    .bar {
+      height: 5px; margin: 3px 0 8px; border-radius: 3px;
+      background: #2a2d34; overflow: hidden;
+    }
+    .bar-fill { height: 100%; background: #e83e9c; border-radius: 3px; }
+    .cov-sys { font-size: 12px; font-weight: 600; color: #b8bec8; margin-top: 10px; }
+    #top-segments, #top-stations { font-size: 12px; }
+    #top-segments div, #top-stations div { padding: 2px 0; }
+    #top-segments .count, #top-stations .count { color: #ff8ac4; font-variant-numeric: tabular-nums; }
+    #top-stations .through { color: #8b919c; }
+    .maplibregl-popup-content {
+      background: #22252c; color: #d7dae0; font-size: 12px; border-radius: 6px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+    }
+    .maplibregl-popup-anchor-bottom .maplibregl-popup-tip { border-top-color: #22252c; }
+    .maplibregl-popup-anchor-top .maplibregl-popup-tip { border-bottom-color: #22252c; }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <div id="panel">
+      <h1>MTA Trip Heat Map</h1>
+      <h2>Date range</h2>
+      <label>From <input type="date" id="date-from" /></label>
+      <label>To <input type="date" id="date-to" /></label>
+      <h2>System coverage (all time)</h2>
+      <div id="coverage"></div>
+      <h2>Totals</h2>
+      <div id="totals"></div>
+      <h2>Most-ridden segments</h2>
+      <div id="top-segments"></div>
+      <h2>Most-visited stations</h2>
+      <div id="top-stations"></div>
+      <h2>Data issues</h2>
+      <div id="errors"></div>
+    </div>
+    <div id="map"></div>
+  </div>
+  <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
+  <script type="module" src="app.js"></script>
+</body>
+</html>
