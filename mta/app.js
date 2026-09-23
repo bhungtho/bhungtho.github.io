@@ -185,10 +185,7 @@ async function main() {
     const frac = (count) =>
       allTimeMax > 1 ? Math.log(count) / Math.log(allTimeMax) : 0.5;
 
-    const refresh = (fit = true) => {
-      const from = fromEl.value || "0000-00-00";
-      const to = toEl.value || "9999-99-99";
-      const filtered = expanded.filter((t) => t.date >= from && t.date <= to);
+    const render = (filtered, fit) => {
       const { segCounts, stationStats } = aggregate(filtered);
       const segFeatures = [...segCounts.entries()].map(([key, v]) => {
         const [a, b] = key.split("|");
@@ -233,11 +230,17 @@ async function main() {
       }
     };
 
+    const refresh = (fit = true) => {
+      const from = fromEl.value || "0000-00-00";
+      const to = toEl.value || "9999-99-99";
+      render(expanded.filter((t) => t.date >= from && t.date <= to), fit);
+    };
+
     fromEl.addEventListener("change", () => refresh());
     toEl.addEventListener("change", () => refresh());
     refresh();
 
-    setupReplay(map, expanded, segments, refresh, fromEl, toEl);
+    setupReplay(map, expanded, segments, render);
   });
 }
 
@@ -245,30 +248,27 @@ function emptyFc() {
   return { type: "FeatureCollection", features: [] };
 }
 
-// Cumulative playback: frames step through distinct trip dates, driving the
-// existing date filter. Camera fits the full extent once at play start, then
-// stays put so frames don't lurch.
-function setupReplay(map, expanded, segments, refresh, fromEl, toEl) {
+// Cumulative playback, one frame per trip in date order. Camera fits the
+// full extent once at play start, then stays put so frames don't lurch.
+function setupReplay(map, expanded, segments, render) {
   const playBtn = document.getElementById("replay-play");
   const slider = document.getElementById("replay-slider");
   const dateEl = document.getElementById("replay-date");
-  const dates = [...new Set(expanded.map((t) => t.date))].sort();
-  if (!dates.length) return;
+  const trips = [...expanded].sort((a, b) => (a.date < b.date ? -1 : a.date > b.date ? 1 : 0));
+  if (!trips.length) return;
 
-  slider.max = dates.length - 1;
-  slider.value = dates.length - 1;
+  slider.max = trips.length - 1;
+  slider.value = trips.length - 1;
 
   const allBounds = new maplibregl.LngLatBounds();
-  const { segCounts } = aggregate(expanded);
+  const { segCounts } = aggregate(trips);
   for (const key of segCounts.keys()) for (const c of segments[key]) allBounds.extend(c);
 
   let timer = null;
   const showFrame = (i) => {
     slider.value = i;
-    dateEl.textContent = dates[i];
-    fromEl.value = dates[0];
-    toEl.value = dates[i];
-    refresh(false);
+    dateEl.textContent = `${trips[i].date} \u00b7 ${i + 1}/${trips.length}`;
+    render(trips.slice(0, i + 1), false);
   };
   const stop = () => {
     clearInterval(timer);
@@ -277,15 +277,15 @@ function setupReplay(map, expanded, segments, refresh, fromEl, toEl) {
   };
   const play = () => {
     let i = Number(slider.value);
-    if (i >= dates.length - 1) i = 0; // replay from the start when at the end
+    if (i >= trips.length - 1) i = 0; // replay from the start when at the end
     if (segCounts.size) map.fitBounds(allBounds, { padding: 60, maxZoom: 13, duration: 400 });
     playBtn.innerHTML = "&#9646;&#9646;";
     showFrame(i);
     timer = setInterval(() => {
       i += 1;
-      if (i >= dates.length) { stop(); return; }
+      if (i >= trips.length) { stop(); return; }
       showFrame(i);
-    }, 900);
+    }, 700);
   };
 
   playBtn.addEventListener("click", () => (timer ? stop() : play()));
