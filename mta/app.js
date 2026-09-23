@@ -28,6 +28,18 @@ async function fetchJson(url) {
   return r.json();
 }
 
+// Panel toggle is wired immediately so it works even if data loading fails.
+let mapRef = null;
+const toggleEl = document.getElementById("panel-toggle");
+function setPanelHidden(hidden) {
+  document.body.classList.toggle("panel-hidden", hidden);
+  toggleEl.innerHTML = hidden ? "&#9776;" : "&#10005;";
+  mapRef?.resize();
+}
+toggleEl.addEventListener("click", () =>
+  setPanelHidden(!document.body.classList.contains("panel-hidden")));
+if (window.matchMedia("(max-width: 640px)").matches) setPanelHidden(true);
+
 async function main() {
   const [stations, routes, variants, segments, overrides, tripsText] = await Promise.all([
     fetchJson("data/stations.json"),
@@ -65,17 +77,7 @@ async function main() {
     attributionControl: { compact: true },
   });
   map.addControl(new maplibregl.NavigationControl(), "top-right");
-
-  const toggleEl = document.getElementById("panel-toggle");
-  const setPanelHidden = (hidden) => {
-    document.body.classList.toggle("panel-hidden", hidden);
-    toggleEl.innerHTML = hidden ? "&#9776;" : "&#10005;";
-    map.resize();
-  };
-  toggleEl.addEventListener("click", () =>
-    setPanelHidden(!document.body.classList.contains("panel-hidden")));
-  // Panel starts closed on small screens so the map gets the viewport.
-  if (window.matchMedia("(max-width: 640px)").matches) setPanelHidden(true);
+  mapRef = map;
 
   map.on("load", () => {
     // Full-network backdrop (unridden track).
