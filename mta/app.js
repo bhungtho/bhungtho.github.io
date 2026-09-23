@@ -177,7 +177,7 @@ async function main() {
       if (!hits.length) popup.remove();
     });
 
-    const refresh = () => {
+    const refresh = (fit = true) => {
       const from = fromEl.value || "0000-00-00";
       const to = toEl.value || "9999-99-99";
       const filtered = expanded.filter((t) => t.date >= from && t.date <= to);
@@ -223,21 +223,73 @@ async function main() {
       renderTopSegments(segCounts, stations);
       renderTopStations(stationStats, stations);
 
-      if (segFeatures.length) {
+      if (fit && segFeatures.length) {
         const bounds = new maplibregl.LngLatBounds();
         for (const f of segFeatures) for (const c of f.geometry.coordinates) bounds.extend(c);
         map.fitBounds(bounds, { padding: 60, maxZoom: 13, duration: 400 });
       }
     };
 
-    fromEl.addEventListener("change", refresh);
-    toEl.addEventListener("change", refresh);
+    fromEl.addEventListener("change", () => refresh());
+    toEl.addEventListener("change", () => refresh());
     refresh();
+
+    setupReplay(map, expanded, segments, refresh, fromEl, toEl);
   });
 }
 
 function emptyFc() {
   return { type: "FeatureCollection", features: [] };
+}
+
+// Cumulative playback: frames step through distinct trip dates, driving the
+// existing date filter. Camera fits the full extent once at play start, then
+// stays put so frames don't lurch.
+function setupReplay(map, expanded, segments, refresh, fromEl, toEl) {
+  const playBtn = document.getElementById("replay-play");
+  const slider = document.getElementById("replay-slider");
+  const dateEl = document.getElementById("replay-date");
+  const dates = [...new Set(expanded.map((t) => t.date))].sort();
+  if (!dates.length) return;
+
+  slider.max = dates.length - 1;
+  slider.value = dates.length - 1;
+
+  const allBounds = new maplibregl.LngLatBounds();
+  const { segCounts } = aggregate(expanded);
+  for (const key of segCounts.keys()) for (const c of segments[key]) allBounds.extend(c);
+
+  let timer = null;
+  const showFrame = (i) => {
+    slider.value = i;
+    dateEl.textContent = dates[i];
+    fromEl.value = dates[0];
+    toEl.value = dates[i];
+    refresh(false);
+  };
+  const stop = () => {
+    clearInterval(timer);
+    timer = null;
+    playBtn.innerHTML = "&#9654;";
+  };
+  const play = () => {
+    let i = Number(slider.value);
+    if (i >= dates.length - 1) i = 0; // replay from the start when at the end
+    if (segCounts.size) map.fitBounds(allBounds, { padding: 60, maxZoom: 13, duration: 400 });
+    playBtn.innerHTML = "&#9646;&#9646;";
+    showFrame(i);
+    timer = setInterval(() => {
+      i += 1;
+      if (i >= dates.length) { stop(); return; }
+      showFrame(i);
+    }, 900);
+  };
+
+  playBtn.addEventListener("click", () => (timer ? stop() : play()));
+  slider.addEventListener("input", () => {
+    stop();
+    showFrame(Number(slider.value));
+  });
 }
 
 // All-time and per-system: date filtering shouldn't shrink lifetime progress,

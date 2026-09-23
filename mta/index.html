@@ -37,6 +37,14 @@
       width: 100%; margin-top: 2px; padding: 4px 6px; font-size: 13px;
       background: #22252c; color: #d7dae0; border: 1px solid #2a2d34; border-radius: 4px;
     }
+    #replay { display: flex; align-items: center; gap: 8px; }
+    #replay button {
+      width: 30px; height: 26px; flex-shrink: 0; font-size: 12px;
+      background: #22252c; color: #d7dae0; border: 1px solid #3a3d44;
+      border-radius: 4px; cursor: pointer;
+    }
+    #replay input[type="range"] { flex: 1; min-width: 0; accent-color: #e83e9c; }
+    #replay-date { font-size: 11px; color: #8b919c; min-width: 74px; text-align: right; }
     #errors { font-size: 12px; }
     #errors .err {
       background: #3a2226; border: 1px solid #5c3138; border-radius: 4px;
@@ -69,6 +77,12 @@
       <h2>Date range</h2>
       <label>From <input type="date" id="date-from" /></label>
       <label>To <input type="date" id="date-to" /></label>
+      <h2>Replay</h2>
+      <div id="replay">
+        <button id="replay-play" title="Play">&#9654;</button>
+        <input type="range" id="replay-slider" min="0" max="0" value="0" />
+        <span id="replay-date"></span>
+      </div>
       <h2>System coverage (all time)</h2>
       <div id="coverage"></div>
       <h2>Totals</h2>
