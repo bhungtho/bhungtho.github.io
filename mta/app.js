@@ -66,6 +66,17 @@ async function main() {
   });
   map.addControl(new maplibregl.NavigationControl(), "top-right");
 
+  const toggleEl = document.getElementById("panel-toggle");
+  const setPanelHidden = (hidden) => {
+    document.body.classList.toggle("panel-hidden", hidden);
+    toggleEl.innerHTML = hidden ? "&#9776;" : "&#10005;";
+    map.resize();
+  };
+  toggleEl.addEventListener("click", () =>
+    setPanelHidden(!document.body.classList.contains("panel-hidden")));
+  // Panel starts closed on small screens so the map gets the viewport.
+  if (window.matchMedia("(max-width: 640px)").matches) setPanelHidden(true);
+
   map.on("load", () => {
     // Full-network backdrop (unridden track).
     map.addSource("network", {
@@ -134,28 +145,34 @@ async function main() {
     });
 
     const popup = new maplibregl.Popup({ closeButton: false, closeOnClick: false });
-    map.on("mousemove", "segments", (e) => {
-      map.getCanvas().style.cursor = "pointer";
+    const segPopup = (e) => {
       const p = e.features[0].properties;
       popup.setLngLat(e.lngLat)
         .setHTML(`<b>${p.name}</b><br>${p.count} ride${p.count === 1 ? "" : "s"} · ${p.routes}`)
         .addTo(map);
-    });
-    map.on("mouseleave", "segments", () => {
-      map.getCanvas().style.cursor = "";
-      popup.remove();
-    });
-    map.on("mousemove", "stations", (e) => {
+    };
+    const stationPopup = (e) => {
       const p = e.features[0].properties;
       if (!p.used) return;
-      map.getCanvas().style.cursor = "pointer";
       popup.setLngLat(e.lngLat)
         .setHTML(`<b>${p.name}</b><br>on: ${p.board} · off: ${p.alight} · through: ${p.through}`)
         .addTo(map);
-    });
-    map.on("mouseleave", "stations", () => {
-      map.getCanvas().style.cursor = "";
-      popup.remove();
+    };
+    // click handlers cover touch devices, where hover never fires.
+    for (const [layer, handler] of [["segments", segPopup], ["stations", stationPopup]]) {
+      map.on("click", layer, handler);
+      map.on("mousemove", layer, (e) => {
+        map.getCanvas().style.cursor = "pointer";
+        handler(e);
+      });
+      map.on("mouseleave", layer, () => {
+        map.getCanvas().style.cursor = "";
+        popup.remove();
+      });
+    }
+    map.on("click", (e) => {
+      const hits = map.queryRenderedFeatures(e.point, { layers: ["segments", "stations"] });
+      if (!hits.length) popup.remove();
     });
 
     const refresh = () => {

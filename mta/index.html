@@ -14,7 +14,20 @@
       width: 300px; padding: 16px; overflow-y: auto; flex-shrink: 0;
       background: #16181d; color: #d7dae0; border-right: 1px solid #2a2d34;
     }
-    #panel h1 { font-size: 16px; margin: 0 0 12px; color: #fff; }
+    body.panel-hidden #panel { display: none; }
+    #panel-toggle {
+      position: fixed; top: 12px; left: 12px; z-index: 20;
+      width: 36px; height: 36px; font-size: 17px; line-height: 1;
+      background: #22252c; color: #d7dae0; border: 1px solid #3a3d44;
+      border-radius: 6px; cursor: pointer;
+    }
+    #panel h1 { font-size: 16px; margin: 2px 0 12px 44px; color: #fff; }
+    @media (max-width: 640px) {
+      #panel {
+        position: fixed; top: 0; left: 0; bottom: 0; z-index: 10;
+        width: min(85vw, 320px); box-shadow: 2px 0 14px rgba(0, 0, 0, 0.6);
+      }
+    }
     #panel h2 { font-size: 12px; text-transform: uppercase; letter-spacing: 0.06em;
                 color: #8b919c; margin: 18px 0 6px; }
     .stat-row { display: flex; justify-content: space-between; font-size: 13px; padding: 2px 0; }
@@ -50,6 +63,7 @@
 </head>
 <body>
   <div id="app">
+    <button id="panel-toggle" title="Toggle panel">&#10005;</button>
     <div id="panel">
       <h1>MTA Trip Heat Map</h1>
       <h2>Date range</h2>
