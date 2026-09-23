@@ -177,16 +177,19 @@ async function main() {
       if (!hits.length) popup.remove();
     });
 
+    // Intensity is anchored to the all-time max count so a segment's color
+    // means the same thing under any date filter, and only brightens during
+    // replay. Log scale keeps low counts distinct as the max grows.
+    const allTimeMax = Math.max(
+      1, ...[...aggregate(expanded).segCounts.values()].map((v) => v.count));
+    const frac = (count) =>
+      allTimeMax > 1 ? Math.log(count) / Math.log(allTimeMax) : 0.5;
+
     const refresh = (fit = true) => {
       const from = fromEl.value || "0000-00-00";
       const to = toEl.value || "9999-99-99";
       const filtered = expanded.filter((t) => t.date >= from && t.date <= to);
       const { segCounts, stationStats } = aggregate(filtered);
-
-      const maxCount = Math.max(1, ...[...segCounts.values()].map((v) => v.count));
-      // Log scale keeps low counts distinct once one segment's count grows large.
-      const frac = (count) =>
-        maxCount > 1 ? Math.log(count) / Math.log(maxCount) : 0.5;
       const segFeatures = [...segCounts.entries()].map(([key, v]) => {
         const [a, b] = key.split("|");
         return {
