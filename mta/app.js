@@ -112,13 +112,18 @@ async function main() {
     map.addSource("segments", { type: "geojson", data: emptyFc() });
     map.addSource("stations", { type: "geojson", data: emptyFc() });
 
-    // Visited-neighborhood shading, lazy-loaded (2 MB) on first enable.
+    // Neighborhood overlay (visited fill + citywide borders), lazy-loaded
+    // (~4 MB) on first enable.
     const hoodToggle = document.getElementById("hood-fill-toggle");
     hoodToggle.addEventListener("change", async () => {
       if (hoodToggle.checked && !map.getSource("hoods")) {
-        const fc = await fetchJson("data/hoods.json").catch(() => null);
-        if (!fc) { hoodToggle.checked = false; return; }
-        map.addSource("hoods", { type: "geojson", data: fc });
+        const [fills, borders] = await Promise.all([
+          fetchJson("data/hoods.json").catch(() => null),
+          fetchJson("data/hood_borders.json").catch(() => null),
+        ]);
+        if (!fills || !borders) { hoodToggle.checked = false; return; }
+        map.addSource("hoods", { type: "geojson", data: fills });
+        map.addSource("hood-borders", { type: "geojson", data: borders });
         map.addLayer({
           id: "hoods",
           type: "fill",
@@ -126,8 +131,20 @@ async function main() {
           filter: ["in", ["get", "hood"], ["literal", visitedHoods]],
           paint: { "fill-color": "#e83e9c", "fill-opacity": 0.08 },
         }, "network"); // beneath all linework
+        map.addLayer({
+          id: "hood-borders",
+          type: "line",
+          source: "hood-borders",
+          paint: {
+            "line-color": "#66788c",
+            "line-width": ["interpolate", ["linear"], ["zoom"], 9, 0.4, 13, 1],
+            "line-opacity": 0.45,
+          },
+        }, "network");
       } else if (map.getLayer("hoods")) {
-        map.setLayoutProperty("hoods", "visibility", hoodToggle.checked ? "visible" : "none");
+        const vis = hoodToggle.checked ? "visible" : "none";
+        map.setLayoutProperty("hoods", "visibility", vis);
+        map.setLayoutProperty("hood-borders", "visibility", vis);
       }
     });
 
