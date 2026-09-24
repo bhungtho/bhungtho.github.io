@@ -222,6 +222,7 @@ async function main() {
       renderTotals(filtered, segCounts, stationStats);
       renderTopSegments(segCounts, stations);
       renderTopStations(stationStats, stations);
+      renderTopLines(filtered);
 
       if (fit && segFeatures.length) {
         const bounds = new maplibregl.LngLatBounds();
@@ -387,6 +388,18 @@ function renderTopStations(stationStats, stations) {
       const through = s.through ? ` <span class="through">(+${s.through} through)</span>` : "";
       return `<div><span class="count">${s.visits}\u00d7</span> ${s.name}${through}</div>`;
     })
+    .join("");
+}
+
+function renderTopLines(filtered) {
+  const counts = new Map();
+  for (const t of filtered) counts.set(t.route, (counts.get(t.route) || 0) + 1);
+  const top = [...counts.entries()]
+    .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
+    .slice(0, 8);
+  document.getElementById("top-lines").innerHTML = top
+    .map(([route, n]) =>
+      `<div><span class="count">${n}\u00d7</span> ${route}</div>`)
     .join("");
 }
 

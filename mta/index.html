@@ -57,9 +57,9 @@
     }
     .bar-fill { height: 100%; background: #e83e9c; border-radius: 3px; }
     .cov-sys { font-size: 12px; font-weight: 600; color: #b8bec8; margin-top: 10px; }
-    #top-segments, #top-stations { font-size: 12px; }
-    #top-segments div, #top-stations div { padding: 2px 0; }
-    #top-segments .count, #top-stations .count { color: #ff8ac4; font-variant-numeric: tabular-nums; }
+    #top-segments, #top-stations, #top-lines { font-size: 12px; }
+    #top-segments div, #top-stations div, #top-lines div { padding: 2px 0; }
+    #top-segments .count, #top-stations .count, #top-lines .count { color: #ff8ac4; font-variant-numeric: tabular-nums; }
     #top-stations .through { color: #8b919c; }
     .maplibregl-popup-content {
       background: #22252c; color: #d7dae0; font-size: 12px; border-radius: 6px;
@@ -91,6 +91,8 @@
       <div id="top-segments"></div>
       <h2>Most-visited stations</h2>
       <div id="top-stations"></div>
+      <h2>Most-ridden lines</h2>
+      <div id="top-lines"></div>
       <h2>Data issues</h2>
       <div id="errors"></div>
     </div>
