@@ -28,6 +28,8 @@ async function fetchJson(url) {
   return r.json();
 }
 
+let visitedHoods = [];
+
 // Panel toggle is wired immediately so it works even if data loading fails.
 let mapRef = null;
 const toggleEl = document.getElementById("panel-toggle");
@@ -109,6 +111,25 @@ async function main() {
 
     map.addSource("segments", { type: "geojson", data: emptyFc() });
     map.addSource("stations", { type: "geojson", data: emptyFc() });
+
+    // Visited-neighborhood shading, lazy-loaded (2 MB) on first enable.
+    const hoodToggle = document.getElementById("hood-fill-toggle");
+    hoodToggle.addEventListener("change", async () => {
+      if (hoodToggle.checked && !map.getSource("hoods")) {
+        const fc = await fetchJson("data/hoods.json").catch(() => null);
+        if (!fc) { hoodToggle.checked = false; return; }
+        map.addSource("hoods", { type: "geojson", data: fc });
+        map.addLayer({
+          id: "hoods",
+          type: "fill",
+          source: "hoods",
+          filter: ["in", ["get", "hood"], ["literal", visitedHoods]],
+          paint: { "fill-color": "#e83e9c", "fill-opacity": 0.08 },
+        }, "network"); // beneath all linework
+      } else if (map.getLayer("hoods")) {
+        map.setLayoutProperty("hoods", "visibility", hoodToggle.checked ? "visible" : "none");
+      }
+    });
 
     map.addLayer({
       id: "segments",
@@ -202,6 +223,14 @@ async function main() {
         };
       });
       map.getSource("segments").setData({ type: "FeatureCollection", features: segFeatures });
+
+      visitedHoods = [...new Set(
+        [...stationStats.entries()]
+          .filter(([id, s]) => s.board + s.alight > 0 && stations[id].hood)
+          .map(([id]) => stations[id].hood))];
+      if (map.getLayer("hoods")) {
+        map.setFilter("hoods", ["in", ["get", "hood"], ["literal", visitedHoods]]);
+      }
 
       const stationFeatures = Object.entries(stations).map(([id, s]) => {
         const st = stationStats.get(id);

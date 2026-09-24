@@ -39,6 +39,11 @@
     .stat-row { display: flex; justify-content: space-between; font-size: 13px; padding: 2px 0; }
     .stat-row .value { color: #fff; font-variant-numeric: tabular-nums; }
     label { font-size: 12px; color: #8b919c; display: block; margin-top: 8px; }
+    label.check {
+      display: flex; align-items: center; gap: 6px; margin: 4px 0 8px;
+      color: #d7dae0; cursor: pointer;
+    }
+    label.check input { accent-color: #e83e9c; }
     input[type="date"] {
       width: 100%; margin-top: 2px; padding: 4px 6px; font-size: 13px;
       background: #22252c; color: #d7dae0; border: 1px solid #2a2d34; border-radius: 4px;
@@ -110,6 +115,7 @@
         <div id="top-lines"></div>
       </details>
       <details open><summary>Neighborhoods</summary>
+        <label class="check"><input type="checkbox" id="hood-fill-toggle" /> Shade visited neighborhoods on map</label>
         <div id="hood-coverage"></div>
         <div id="top-hoods"></div>
       </details>
