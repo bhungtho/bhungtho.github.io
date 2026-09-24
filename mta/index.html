@@ -22,14 +22,20 @@
       border-radius: 6px; cursor: pointer;
     }
     #panel h1 { font-size: 16px; margin: 2px 0 12px 44px; color: #fff; }
+    #panel details { margin-top: 14px; }
+    #panel summary {
+      font-size: 12px; text-transform: uppercase; letter-spacing: 0.06em;
+      color: #8b919c; cursor: pointer; user-select: none; margin-bottom: 6px;
+    }
+    #panel summary::marker { color: #4a4f58; }
+    #chart svg { display: block; width: 100%; }
     @media (max-width: 640px) {
       #panel {
         position: fixed; top: 0; left: 0; bottom: 0; z-index: 10;
         width: min(85vw, 320px); box-shadow: 2px 0 14px rgba(0, 0, 0, 0.6);
       }
     }
-    #panel h2 { font-size: 12px; text-transform: uppercase; letter-spacing: 0.06em;
-                color: #8b919c; margin: 18px 0 6px; }
+
     .stat-row { display: flex; justify-content: space-between; font-size: 13px; padding: 2px 0; }
     .stat-row .value { color: #fff; font-variant-numeric: tabular-nums; }
     label { font-size: 12px; color: #8b919c; display: block; margin-top: 8px; }
@@ -74,27 +80,38 @@
     <button id="panel-toggle" title="Toggle panel">&#10005;</button>
     <div id="panel">
       <h1>MTA Trip Heat Map</h1>
-      <h2>Date range</h2>
-      <label>From <input type="date" id="date-from" /></label>
-      <label>To <input type="date" id="date-to" /></label>
-      <h2>Replay</h2>
-      <div id="replay">
-        <button id="replay-play" title="Play">&#9654;</button>
-        <input type="range" id="replay-slider" min="0" max="0" value="0" />
-        <span id="replay-date"></span>
-      </div>
-      <h2>System coverage (all time)</h2>
-      <div id="coverage"></div>
-      <h2>Totals</h2>
-      <div id="totals"></div>
-      <h2>Most-ridden segments</h2>
-      <div id="top-segments"></div>
-      <h2>Most-visited stations</h2>
-      <div id="top-stations"></div>
-      <h2>Most-ridden lines</h2>
-      <div id="top-lines"></div>
-      <h2>Data issues</h2>
-      <div id="errors"></div>
+      <details open><summary>Date range</summary>
+        <label>From <input type="date" id="date-from" /></label>
+        <label>To <input type="date" id="date-to" /></label>
+      </details>
+      <details open><summary>Replay</summary>
+        <div id="replay">
+          <button id="replay-play" title="Play">&#9654;</button>
+          <input type="range" id="replay-slider" min="0" max="0" value="0" />
+          <span id="replay-date"></span>
+        </div>
+      </details>
+      <details open><summary>Rides over time</summary>
+        <div id="chart"></div>
+      </details>
+      <details open><summary>System coverage (all time)</summary>
+        <div id="coverage"></div>
+      </details>
+      <details open><summary>Totals</summary>
+        <div id="totals"></div>
+      </details>
+      <details open><summary>Most-ridden segments</summary>
+        <div id="top-segments"></div>
+      </details>
+      <details open><summary>Most-visited stations</summary>
+        <div id="top-stations"></div>
+      </details>
+      <details open><summary>Most-ridden lines</summary>
+        <div id="top-lines"></div>
+      </details>
+      <details open><summary>Data issues</summary>
+        <div id="errors"></div>
+      </details>
     </div>
     <div id="map"></div>
   </div>

@@ -223,6 +223,7 @@ async function main() {
       renderTopSegments(segCounts, stations);
       renderTopStations(stationStats, stations);
       renderTopLines(filtered);
+      renderChart(filtered);
 
       if (fit && segFeatures.length) {
         const bounds = new maplibregl.LngLatBounds();
@@ -389,6 +390,63 @@ function renderTopStations(stationStats, stations) {
       return `<div><span class="count">${s.visits}\u00d7</span> ${s.name}${through}</div>`;
     })
     .join("");
+}
+
+// Weekly bars (monthly once the span exceeds two years), inline SVG.
+function renderChart(filtered) {
+  const el = document.getElementById("chart");
+  if (!filtered.length) { el.innerHTML = ""; return; }
+  const dates = filtered.map((t) => t.date).sort();
+  const weekStart = (isoDate) => {
+    const d = new Date(isoDate + "T00:00:00Z");
+    d.setUTCDate(d.getUTCDate() - ((d.getUTCDay() + 6) % 7)); // Monday
+    return d;
+  };
+  const iso = (d) => d.toISOString().slice(0, 10);
+  const WEEK = 7 * 86400000;
+  const first = weekStart(dates[0]);
+  const nWeeks = Math.round((weekStart(dates[dates.length - 1]) - first) / WEEK) + 1;
+  const monthly = nWeeks > 104;
+
+  let keys, keyOf, prefix;
+  if (monthly) {
+    keyOf = (date) => date.slice(0, 7);
+    prefix = "";
+    keys = [];
+    const d = new Date(dates[0].slice(0, 7) + "-01T00:00:00Z");
+    const end = keyOf(dates[dates.length - 1]);
+    for (;;) {
+      const k = d.toISOString().slice(0, 7);
+      keys.push(k);
+      if (k === end) break;
+      d.setUTCMonth(d.getUTCMonth() + 1);
+    }
+  } else {
+    keyOf = (date) => iso(weekStart(date));
+    prefix = "week of ";
+    keys = Array.from({ length: nWeeks }, (_, i) => iso(new Date(first.getTime() + i * WEEK)));
+  }
+  const counts = new Map(keys.map((k) => [k, 0]));
+  for (const t of filtered) counts.set(keyOf(t.date), counts.get(keyOf(t.date)) + 1);
+
+  const max = Math.max(1, ...counts.values());
+  const W = 268, H = 48, LBL = 11;
+  const bw = W / keys.length;
+  const bars = keys.map((k, i) => {
+    const c = counts.get(k);
+    if (!c) return "";
+    const h = Math.max(2, (c / max) * H);
+    return `<rect x="${(i * bw + 0.5).toFixed(1)}" y="${(H - h).toFixed(1)}"` +
+      ` width="${Math.max(1, bw - 1).toFixed(1)}" height="${h.toFixed(1)}" fill="#e83e9c">` +
+      `<title>${prefix}${k}: ${c} ride${c === 1 ? "" : "s"}</title></rect>`;
+  }).join("");
+  el.innerHTML =
+    `<svg viewBox="0 0 ${W} ${H + LBL}" xmlns="http://www.w3.org/2000/svg">` +
+    bars +
+    `<line x1="0" y1="${H + 0.5}" x2="${W}" y2="${H + 0.5}" stroke="#3a3d44"/>` +
+    `<text x="0" y="${H + LBL - 1}" font-size="8" fill="#8b919c">${keys[0]}</text>` +
+    `<text x="${W}" y="${H + LBL - 1}" font-size="8" fill="#8b919c" text-anchor="end">` +
+    `${keys[keys.length - 1]}</text></svg>`;
 }
 
 function renderTopLines(filtered) {
