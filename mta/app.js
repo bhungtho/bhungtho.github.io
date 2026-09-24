@@ -60,6 +60,7 @@ async function main() {
 
   renderErrors(parseErrors, tripErrors);
   renderCoverage(expanded, segments, stations);
+  renderHoodCoverage(expanded, stations);
 
   const dates = expanded.map((t) => t.date).sort();
   const fromEl = document.getElementById("date-from");
@@ -223,6 +224,7 @@ async function main() {
       renderTopSegments(segCounts, stations);
       renderTopStations(stationStats, stations);
       renderTopLines(filtered);
+      renderTopHoods(stationStats, stations);
       renderChart(filtered);
 
       if (fit && segFeatures.length) {
@@ -458,6 +460,38 @@ function renderTopLines(filtered) {
   document.getElementById("top-lines").innerHTML = top
     .map(([route, n]) =>
       `<div><span class="count">${n}\u00d7</span> ${route}</div>`)
+    .join("");
+}
+
+// A neighborhood counts as visited when you boarded or exited there;
+// riding through underneath doesn't count. All-time, like system coverage.
+function renderHoodCoverage(expanded, stations) {
+  const { stationStats } = aggregate(expanded);
+  const visited = new Set();
+  for (const [id, s] of stationStats.entries()) {
+    if (s.board + s.alight > 0 && stations[id].hood) visited.add(stations[id].hood);
+  }
+  const total = new Set(
+    Object.values(stations).map((s) => s.hood).filter(Boolean)).size;
+  const pct = total ? (100 * visited.size) / total : 0;
+  document.getElementById("hood-coverage").innerHTML = `
+    <div class="stat-row"><span>visited (all time)</span>
+      <span class="value">${visited.size} / ${total} (${pct.toFixed(1)}%)</span></div>
+    <div class="bar"><div class="bar-fill" style="width:${pct.toFixed(1)}%"></div></div>`;
+}
+
+function renderTopHoods(stationStats, stations) {
+  const counts = new Map();
+  for (const [id, s] of stationStats.entries()) {
+    const hood = stations[id].hood;
+    const visits = s.board + s.alight;
+    if (hood && visits) counts.set(hood, (counts.get(hood) || 0) + visits);
+  }
+  const top = [...counts.entries()]
+    .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
+    .slice(0, 8);
+  document.getElementById("top-hoods").innerHTML = top
+    .map(([hood, n]) => `<div><span class="count">${n}\u00d7</span> ${hood}</div>`)
     .join("");
 }
 
