@@ -63,6 +63,7 @@ async function main() {
   renderErrors(parseErrors, tripErrors);
   renderCoverage(expanded, segments, stations);
   renderHoodCoverage(expanded, stations);
+  setupRawTable(trips, expanded, tripErrors);
 
   const dates = expanded.map((t) => t.date).sort();
   const fromEl = document.getElementById("date-from");
@@ -569,6 +570,34 @@ function renderTopHoods(stationStats, stations) {
   document.getElementById("top-hoods").innerHTML = top
     .map(([hood, n]) => `<div><span class="count">${n}\u00d7</span> ${hood}</div>`)
     .join("");
+}
+
+function setupRawTable(trips, expanded, tripErrors) {
+  const esc = (s) => String(s ?? "").replace(/[&<>"]/g,
+    (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+  const errByTrip = new Map(tripErrors.map((e) => [e.trip, e.error]));
+  const queue = [...expanded]; // same order as trips, minus errored rows
+  const rows = trips.map((t) => {
+    const err = errByTrip.get(t);
+    const status = err
+      ? `<span class="bad" title="${esc(err)}">error</span>`
+      : `<span class="ok">${queue.shift().path.length} stops</span>`;
+    return `<tr><td>${esc(t.date)}</td><td>${esc(t.start)}</td><td>${esc(t.end)}</td>` +
+      `<td>${esc(t.route)}</td><td>${esc(t.via ?? "")}</td>` +
+      `<td class="num">${esc(t.car ?? "")}</td><td>${status}</td></tr>`;
+  });
+  document.getElementById("raw-table").innerHTML =
+    "<thead><tr><th>Date</th><th>Start</th><th>End</th><th>Line</th>" +
+    "<th>Via</th><th>Car</th><th>Status</th></tr></thead>" +
+    `<tbody>${rows.join("")}</tbody>`;
+
+  const modal = document.getElementById("raw-modal");
+  document.getElementById("raw-open").addEventListener("click", () => (modal.hidden = false));
+  document.getElementById("raw-close").addEventListener("click", () => (modal.hidden = true));
+  modal.addEventListener("click", (e) => { if (e.target === modal) modal.hidden = true; });
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") modal.hidden = true;
+  });
 }
 
 function renderErrors(parseErrors, tripErrors) {

@@ -73,6 +73,44 @@
     #top-segments .count, #top-stations .count, #top-lines .count, #top-hoods .count, #top-cars .count { color: #ff8ac4; font-variant-numeric: tabular-nums; }
     #top-cars .dim { color: #8b919c; }
     #top-stations .through { color: #8b919c; }
+    .panel-btn {
+      width: 100%; padding: 6px; font-size: 12px; cursor: pointer;
+      background: #22252c; color: #d7dae0; border: 1px solid #3a3d44;
+      border-radius: 4px;
+    }
+    #raw-modal {
+      position: fixed; inset: 0; z-index: 30; background: rgba(0, 0, 0, 0.65);
+      display: flex; align-items: center; justify-content: center;
+    }
+    #raw-modal[hidden] { display: none; }
+    #raw-box {
+      background: #16181d; color: #d7dae0; border: 1px solid #2a2d34;
+      border-radius: 8px; max-width: min(92vw, 900px); max-height: 85vh;
+      display: flex; flex-direction: column;
+    }
+    #raw-head {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 10px 14px; border-bottom: 1px solid #2a2d34;
+    }
+    #raw-head b { font-size: 14px; }
+    #raw-close {
+      width: 28px; height: 28px; font-size: 13px; cursor: pointer;
+      background: #22252c; color: #d7dae0; border: 1px solid #3a3d44;
+      border-radius: 4px;
+    }
+    #raw-scroll { overflow: auto; }
+    #raw-table { border-collapse: collapse; font-size: 12px; width: 100%; }
+    #raw-table th, #raw-table td {
+      padding: 5px 10px; text-align: left; white-space: nowrap;
+      border-bottom: 1px solid #22252c;
+    }
+    #raw-table th {
+      position: sticky; top: 0; background: #1c1f26; color: #8b919c;
+      font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em;
+    }
+    #raw-table td.num { font-variant-numeric: tabular-nums; }
+    #raw-table .ok { color: #7dc98f; }
+    #raw-table .bad { color: #f0b9be; }
     .maplibregl-popup-content {
       background: #22252c; color: #d7dae0; font-size: 12px; border-radius: 6px;
       box-shadow: 0 2px 10px rgba(0,0,0,0.5);
@@ -127,8 +165,17 @@
       <details open><summary>Data issues</summary>
         <div id="errors"></div>
       </details>
+      <details open><summary>Trip log</summary>
+        <button id="raw-open" class="panel-btn">View raw data</button>
+      </details>
     </div>
     <div id="map"></div>
+  </div>
+  <div id="raw-modal" hidden>
+    <div id="raw-box">
+      <div id="raw-head"><b>Trip log</b><button id="raw-close" title="Close">&#10005;</button></div>
+      <div id="raw-scroll"><table id="raw-table"></table></div>
+    </div>
   </div>
   <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
   <script type="module" src="app.js"></script>
