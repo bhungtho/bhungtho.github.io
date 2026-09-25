@@ -580,11 +580,15 @@ function setupRawTable(trips, expanded, tripErrors) {
   const rows = trips.map((t) => {
     const err = errByTrip.get(t);
     const status = err
-      ? `<span class="bad" title="${esc(err)}">error</span>`
+      ? `<span class="bad">error</span>`
       : `<span class="ok">${queue.shift().path.length} stops</span>`;
-    return `<tr><td>${esc(t.date)}</td><td>${esc(t.start)}</td><td>${esc(t.end)}</td>` +
+    let html = `<tr><td>${esc(t.date)}</td><td>${esc(t.start)}</td><td>${esc(t.end)}</td>` +
       `<td>${esc(t.route)}</td><td>${esc(t.via ?? "")}</td>` +
       `<td class="num">${esc(t.car ?? "")}</td><td>${status}</td></tr>`;
+    // Error reasons get their own row: visible on touch, where title
+    // tooltips never show.
+    if (err) html += `<tr class="err-detail"><td colspan="7">${esc(err)}</td></tr>`;
+    return html;
   });
   document.getElementById("raw-table").innerHTML =
     "<thead><tr><th>Date</th><th>Start</th><th>End</th><th>Line</th>" +
