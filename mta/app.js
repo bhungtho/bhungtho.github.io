@@ -5,7 +5,7 @@ import {
 
 const SYSTEM_NAMES = {
   sub: "Subway", lirr: "LIRR", mnr: "Metro-North", njt: "NJ Transit",
-  fer: "NYC Ferry",
+  path: "PATH", fer: "NYC Ferry",
 };
 
 // Published Google Sheet CSV; set to "trips.csv" to read the local file.
@@ -448,7 +448,7 @@ function renderCoverage(expanded, segments, stations) {
   for (const key of segCounts.keys()) entry(sysOf(key)).segDone += 1;
   for (const id of stationStats.keys()) entry(sysOf(id)).stDone += 1;
 
-  const order = ["sub", "lirr", "mnr", "njt", "fer"];
+  const order = ["sub", "lirr", "mnr", "njt", "path", "fer"];
   const systems = [...totals.keys()].sort(
     (a, b) => (order.indexOf(a) + 99) - (order.indexOf(b) + 99) || a.localeCompare(b));
 

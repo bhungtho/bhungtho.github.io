@@ -27,6 +27,7 @@ FEEDS = [
     ("lirr", "LIRR", "https://rrgtfsfeeds.s3.amazonaws.com/gtfslirr.zip"),
     ("mnr", "Metro-North", "https://rrgtfsfeeds.s3.amazonaws.com/gtfsmnr.zip"),
     ("njt", "NJ Transit", None),
+    ("path", "PATH", "http://data.trilliumtransit.com/gtfs/path-nj-us/path-nj-us.zip"),
     ("fer", "NYC Ferry", "http://nycferry.connexionz.net/rtt/public/utility/gtfs.aspx"),
 ]
 
@@ -176,15 +177,24 @@ def process_feed(key, zf):
             stations[ns(sid)] = _station(key, row)
 
     # --- routes ---
+    route_rows = list(read_csv(zf, "routes.txt"))
+    short_counts = {}
+    for row in route_rows:
+        s = (row.get("route_short_name") or "").strip()
+        if s:
+            short_counts[s] = short_counts.get(s, 0) + 1
     routes = {}
-    for row in read_csv(zf, "routes.txt"):
+    for row in route_rows:
         short = (row.get("route_short_name") or "").strip()
         long = (row.get("route_long_name") or "").strip()
         color = (row.get("route_color") or "").strip()
         text_color = (row.get("route_text_color") or "").strip()
+        # A short name shared by every route (PATH labels all of them "PATH")
+        # is branding, not a line name; fall back to the long name.
+        label = short if short and short_counts[short] == 1 else (long or short or row["route_id"])
         routes[ns(row["route_id"])] = {
             "sys": key,
-            "label": short or long or row["route_id"],
+            "label": label,
             "aliases": route_aliases(short, long),
             "color": f"#{color}" if color else None,
             "textColor": f"#{text_color}" if text_color else None,
