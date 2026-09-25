@@ -171,7 +171,7 @@ export function processTrips(trips, resolve, variants, resolveRoute) {
     if (ex.error) { errors.push({ trip, error: ex.error }); continue; }
     expanded.push({
       date: trip.date, route: r.label, routeKey: r.key, sys: r.sys,
-      startId: s.id, endId: e.id, ...ex,
+      startId: s.id, endId: e.id, car: trip.car ?? null, ...ex,
     });
   }
   return { expanded, errors };
@@ -199,8 +199,10 @@ export function aggregate(expanded) {
   return { segCounts, stationStats };
 }
 
-// Rows: date, start, end, line[, via]. Tab- or comma-separated; header row
-// and blank lines are skipped; dates are M/D/YYYY or ISO.
+// Rows: date, start, end, line[, via][, car number]. Tab- or comma-separated;
+// header row and blank lines are skipped; dates are M/D/YYYY or ISO. The
+// optional trailing fields are classified by content (car numbers are purely
+// numeric, station names never are), so they work in either order.
 export function parseTrips(text) {
   const trips = [];
   const errors = [];
@@ -214,14 +216,21 @@ export function parseTrips(text) {
       errors.push({ lineNumber: n + 1, error: `expected 4 fields, got ${fields.length}: "${line}"` });
       continue;
     }
-    const [date, start, end, route, via] = fields;
+    const [date, start, end, route, ...extras] = fields;
     const iso = toIsoDate(date);
     if (!iso) {
       if (n === 0) continue;
       errors.push({ lineNumber: n + 1, error: `unparseable date "${date}"` });
       continue;
     }
-    trips.push({ date: iso, start, end, route, via: via || null });
+    let via = null;
+    let car = null;
+    for (const extra of extras) {
+      if (!extra) continue;
+      if (/^\d{2,6}$/.test(extra)) car = car ?? extra;
+      else via = via ?? extra;
+    }
+    trips.push({ date: iso, start, end, route, via, car });
   }
   return { trips, errors };
 }

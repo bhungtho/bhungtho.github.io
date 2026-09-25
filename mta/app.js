@@ -270,6 +270,7 @@ async function main() {
       renderTopSegments(segCounts, stations);
       renderTopStations(stationStats, stations);
       renderTopLines(filtered);
+      renderCars(filtered);
       renderTopHoods(stationStats, stations);
       renderChart(filtered);
 
@@ -507,6 +508,35 @@ function renderTopLines(filtered) {
     .map(([route, n]) =>
       `<div><span class="count">${n}\u00d7</span> ${route}</div>`)
     .join("");
+}
+
+function renderCars(filtered) {
+  const cars = new Map(); // car -> {count, routes: Set}
+  let logged = 0;
+  for (const t of filtered) {
+    if (!t.car) continue;
+    logged += 1;
+    if (!cars.has(t.car)) cars.set(t.car, { count: 0, routes: new Set() });
+    const c = cars.get(t.car);
+    c.count += 1;
+    c.routes.add(t.route);
+  }
+  const rows = [
+    ["Rides with car logged", logged],
+    ["Unique cars", cars.size],
+  ];
+  document.getElementById("car-stats").innerHTML = rows
+    .map(([k, v]) => `<div class="stat-row"><span>${k}</span><span class="value">${v}</span></div>`)
+    .join("");
+  const repeats = [...cars.entries()]
+    .filter(([, c]) => c.count > 1)
+    .sort((a, b) => b[1].count - a[1].count || a[0].localeCompare(b[0]))
+    .slice(0, 8);
+  document.getElementById("top-cars").innerHTML = repeats.length
+    ? repeats.map(([car, c]) =>
+        `<div><span class="count">${c.count}\u00d7</span> car ${car} <span class="dim">(${[...c.routes].sort().join(", ")})</span></div>`)
+      .join("")
+    : (logged ? `<div class="dim">No repeat cars yet.</div>` : "");
 }
 
 // A neighborhood counts as visited when you boarded or exited there;
