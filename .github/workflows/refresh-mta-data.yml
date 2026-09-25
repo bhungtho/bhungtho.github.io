@@ -1,0 +1,56 @@
+name: Refresh MTA data
+
+# Rebuilds the GTFS-derived data behind /mta from each agency's current
+# feed, so service-pattern changes (reroutes, new stations) don't silently
+# drift out of date. Runs monthly; can be triggered manually from the
+# Actions tab.
+
+on:
+  schedule:
+    - cron: "17 6 3 * *" # 06:17 UTC on the 3rd of each month
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Rebuild GTFS-derived data
+        env:
+          CACHE_DIR: ${{ runner.temp }}/gtfs
+          OUT_DIR: mta/data
+        run: python3 scripts/build_mta_data.py
+
+      # A truncated or malformed feed should fail the run, not get committed.
+      - name: Sanity-check outputs
+        run: |
+          python3 - <<'EOF'
+          import json
+          st = json.load(open('mta/data/stations.json'))
+          seg = json.load(open('mta/data/segments.json'))
+          rt = json.load(open('mta/data/routes.json'))
+          var = json.load(open('mta/data/variants.json'))
+          assert len(st) > 700, f"only {len(st)} stations"
+          assert len(seg) > 1000, f"only {len(seg)} segments"
+          assert 'sub:N' in rt and 'sub:7' in rt and 'lirr:1' in rt, "expected routes missing"
+          assert sum(len(v) for v in var.values()) > 800, "too few service variants"
+          hooded = sum(1 for s in st.values() if s.get('hood'))
+          assert hooded > 500, f"only {hooded} stations have neighborhoods"
+          print("sanity OK:", len(st), "stations,", len(seg), "segments")
+          EOF
+
+      - name: Commit and push if changed
+        run: |
+          if git diff --quiet -- mta/data; then
+            echo "No data changes this month"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add mta/data
+          git commit -m "chore: Monthly MTA GTFS data refresh"
+          git push
