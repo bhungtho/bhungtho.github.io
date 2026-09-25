@@ -19,6 +19,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # Feeds that can't be auto-downloaded (NJ Transit requires a developer
+      # account) are committed under scripts/feeds/ and seeded into the cache
+      # so the refresh doesn't silently drop those systems.
+      - name: Seed manually-downloaded feeds
+        run: mkdir -p "${{ runner.temp }}/gtfs" && cp scripts/feeds/*.zip "${{ runner.temp }}/gtfs/"
+
       - name: Rebuild GTFS-derived data
         env:
           CACHE_DIR: ${{ runner.temp }}/gtfs
@@ -37,6 +43,7 @@ jobs:
           assert len(st) > 700, f"only {len(st)} stations"
           assert len(seg) > 1000, f"only {len(seg)} segments"
           assert 'sub:N' in rt and 'sub:7' in rt and 'lirr:1' in rt, "expected routes missing"
+          assert any(k.startswith('njt:') for k in rt), "NJ Transit routes missing (feeds/njt.zip not seeded?)"
           assert sum(len(v) for v in var.values()) > 800, "too few service variants"
           hooded = sum(1 for s in st.values() if s.get('hood'))
           assert hooded > 500, f"only {hooded} stations have neighborhoods"

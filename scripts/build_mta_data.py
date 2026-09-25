@@ -283,6 +283,33 @@ def process_feed(key, zf):
             [round(b["lon"], 6), round(b["lat"], 6)],
         ]
 
+    # Some agencies (NJT) split one rider-facing line into multiple GTFS
+    # routes (weekday/weekend service). Merge routes with the same long name
+    # and color whose short names are prefix-related (BNTN/BNTNM). The prefix
+    # test keeps genuinely distinct routes that share a long name (subway C/E
+    # are both "8 Avenue Local") apart.
+    by_long = {}
+    for rk in list(routes.keys()):
+        r = routes[rk]
+        long_alias = [a for a in r["aliases"] if " " in a]
+        by_long.setdefault((r.get("color"), tuple(sorted(long_alias))), []).append(rk)
+    for (_, long_alias), keys in by_long.items():
+        if len(keys) < 2 or not long_alias:
+            continue
+        labels = sorted((routes[k]["label"] for k in keys), key=len)
+        if not all(l.startswith(labels[0]) for l in labels):
+            continue
+        primary, *rest = sorted(keys, key=lambda k: len(routes[k]["label"]))
+        for other in rest:
+            seen = {tuple(s) for s in variants.get(primary, [])}
+            for seq in variants.pop(other, []):
+                if tuple(seq) not in seen:
+                    variants.setdefault(primary, []).append(seq)
+            routes[primary]["aliases"] = sorted(
+                set(routes[primary]["aliases"]) | set(routes[other]["aliases"]))
+            del routes[other]
+            print(f"[{key}] merged {other} into {primary} ({routes[primary]['label']})")
+
     n_var = sum(len(v) for v in variants.values())
     print(f"[{key}] {len(stations)} stations, {len(routes)} routes, "
           f"{n_var} variants, {len(segments)} segments"
