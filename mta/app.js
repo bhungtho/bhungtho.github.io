@@ -637,23 +637,28 @@ function renderCars(filtered, carClasses) {
   document.getElementById("car-stats").innerHTML = rows
     .map(([k, v]) => `<div class="stat-row"><span>${k}</span><span class="value">${v}</span></div>`)
     .join("");
-  document.getElementById("car-classes").innerHTML = [...classes.entries()]
+  const classRows = [...classes.entries()]
     .sort((a, b) => b[1].rides - a[1].rides || a[0].localeCompare(b[0]))
     .map(([cls, c]) => {
       const n = c.cars.size;
       return `<div><span class="count">${c.rides}\u00d7</span> ${cls} ` +
         `<span class="dim">(${n} car${n === 1 ? "" : "s"})</span></div>`;
-    })
-    .join("");
+    });
+  document.getElementById("car-classes").innerHTML = classRows.length
+    ? `<div class="sub-head">Rolling stock classes</div>` + classRows.join("")
+    : "";
   const repeats = [...cars.entries()]
     .filter(([, c]) => c.count > 1)
     .sort((a, b) => b[1].count - a[1].count || a[0].localeCompare(b[0]))
     .slice(0, 8);
-  document.getElementById("top-cars").innerHTML = repeats.length
+  const repeatRows = repeats.length
     ? repeats.map(([car, c]) =>
         `<div><span class="count">${c.count}\u00d7</span> car ${car} <span class="dim">(${[...c.routes].sort().join(", ")})</span></div>`)
       .join("")
-    : (logged ? `<div class="dim">No repeat cars yet.</div>` : "");
+    : `<div class="dim">None yet \u2014 same physical car caught twice.</div>`;
+  document.getElementById("top-cars").innerHTML = logged
+    ? `<div class="sub-head">Repeat cars</div>` + repeatRows
+    : "";
 }
 
 // A neighborhood counts as visited when you boarded or exited there;
