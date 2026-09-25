@@ -192,7 +192,7 @@ async function main() {
       type: "circle",
       source: "flash",
       paint: {
-        "circle-radius": 13,
+        "circle-radius": ["interpolate", ["linear"], ["zoom"], 8, 7, 11, 13, 14, 18],
         "circle-color": "#ffb1dd",
         "circle-opacity": 0.35,
         "circle-stroke-color": "#ffffff",
@@ -200,19 +200,20 @@ async function main() {
       },
     });
 
+    // Only visited stations are in the source; radius scales with both
+    // visit count and zoom so dots stay proportionate at regional extents.
     map.addLayer({
       id: "stations",
       type: "circle",
       source: "stations",
       paint: {
         "circle-radius": [
-          "case", ["get", "used"],
-          ["interpolate", ["linear"], ["get", "visits"], 1, 4, 10, 8],
-          2.5,
+          "interpolate", ["linear"], ["zoom"],
+          8, ["interpolate", ["linear"], ["get", "visits"], 1, 1.5, 10, 3],
+          11, ["interpolate", ["linear"], ["get", "visits"], 1, 3, 10, 6],
+          14, ["interpolate", ["linear"], ["get", "visits"], 1, 5, 10, 9],
         ],
-        "circle-color": ["case", ["get", "used"], "#ffffff", "#16181d"],
-        "circle-stroke-color": "#ffffff",
-        "circle-stroke-width": ["case", ["get", "used"], 0, 1.5],
+        "circle-color": "#ffffff",
       },
     });
 
