@@ -30,6 +30,17 @@ async function fetchJson(url) {
 
 let visitedHoods = [];
 
+const COS_LAT = Math.cos((40.73 * Math.PI) / 180);
+function lineKm(coords) {
+  let km = 0;
+  for (let i = 1; i < coords.length; i++) {
+    const dx = (coords[i][0] - coords[i - 1][0]) * COS_LAT;
+    const dy = coords[i][1] - coords[i - 1][1];
+    km += Math.hypot(dx, dy) * 111.32;
+  }
+  return km;
+}
+
 // Panel toggle is wired immediately so it works even if data loading fails.
 let mapRef = null;
 const toggleEl = document.getElementById("panel-toggle");
@@ -54,6 +65,9 @@ async function main() {
       return r.text();
     }),
   ]);
+
+  const segLen = new Map(
+    Object.entries(segments).map(([k, coords]) => [k, lineKm(coords)]));
 
   const { trips, errors: parseErrors } = parseTrips(tripsText);
   const resolve = buildResolver(stations, variants, overrides);
@@ -170,6 +184,21 @@ async function main() {
       },
     });
 
+    // First-visit flashes during replay.
+    map.addSource("flash", { type: "geojson", data: emptyFc() });
+    map.addLayer({
+      id: "flash",
+      type: "circle",
+      source: "flash",
+      paint: {
+        "circle-radius": 13,
+        "circle-color": "#ffb1dd",
+        "circle-opacity": 0.35,
+        "circle-stroke-color": "#ffffff",
+        "circle-stroke-width": 1.5,
+      },
+    });
+
     map.addLayer({
       id: "stations",
       type: "circle",
@@ -187,6 +216,7 @@ async function main() {
     });
 
     const popup = new maplibregl.Popup({ closeButton: false, closeOnClick: false });
+    let segTripLists = new Map(); // segKey -> ["date · line", ...], rebuilt per render
     const segPopup = (e) => {
       const p = e.features[0].properties;
       popup.setLngLat(e.lngLat)
@@ -200,9 +230,7 @@ async function main() {
         .setHTML(`<b>${p.name}</b><br>on: ${p.board} · off: ${p.alight} · through: ${p.through}`)
         .addTo(map);
     };
-    // click handlers cover touch devices, where hover never fires.
     for (const [layer, handler] of [["segments", segPopup], ["stations", stationPopup]]) {
-      map.on("click", layer, handler);
       map.on("mousemove", layer, (e) => {
         map.getCanvas().style.cursor = "pointer";
         handler(e);
@@ -212,6 +240,18 @@ async function main() {
         popup.remove();
       });
     }
+    // Clicks (which also cover touch) get the detailed view: the trips
+    // behind the segment.
+    map.on("click", "segments", (e) => {
+      const p = e.features[0].properties;
+      const list = segTripLists.get(p.key) || [];
+      const shown = list.slice(0, 8).map((s) => `<div>${s}</div>`).join("");
+      const more = list.length > 8 ? `<div>\u2026 +${list.length - 8} more</div>` : "";
+      popup.setLngLat(e.lngLat)
+        .setHTML(`<b>${p.name}</b><br>${p.count} ride${p.count === 1 ? "" : "s"} · ${p.routes}<hr style="border-color:#3a3d44;margin:4px 0">${shown}${more}`)
+        .addTo(map);
+    });
+    map.on("click", "stations", stationPopup);
     map.on("click", (e) => {
       const hits = map.queryRenderedFeatures(e.point, { layers: ["segments", "stations"] });
       if (!hits.length) popup.remove();
@@ -227,12 +267,25 @@ async function main() {
 
     const render = (filtered, fit) => {
       const { segCounts, stationStats } = aggregate(filtered);
+
+      segTripLists = new Map();
+      for (const t of filtered) {
+        const seen = new Set();
+        for (const [a, b] of t.hops) {
+          const k = segKey(a, b);
+          if (seen.has(k)) continue; // a trip crosses a segment at most once per listing
+          seen.add(k);
+          if (!segTripLists.has(k)) segTripLists.set(k, []);
+          segTripLists.get(k).push(`${t.date} \u00b7 ${t.route}`);
+        }
+      }
       const segFeatures = [...segCounts.entries()].map(([key, v]) => {
         const [a, b] = key.split("|");
         return {
           type: "Feature",
           geometry: { type: "LineString", coordinates: segments[key] },
           properties: {
+            key,
             count: v.count,
             frac: frac(v.count),
             routes: [...v.routes].sort().join(" "),
@@ -267,10 +320,19 @@ async function main() {
       }).filter((f) => f.properties.used);
       map.getSource("stations").setData({ type: "FeatureCollection", features: stationFeatures });
 
-      renderTotals(filtered, segCounts, stationStats);
+      let distKm = 0;
+      for (const [key, v] of segCounts) distKm += (segLen.get(key) || 0) * v.count;
+      let longestKm = 0;
+      for (const t of filtered) {
+        let d = 0;
+        for (const [a, b] of t.hops) d += segLen.get(segKey(a, b)) || 0;
+        if (d > longestKm) longestKm = d;
+      }
+
+      renderTotals(filtered, segCounts, stationStats, distKm, longestKm);
       renderTopSegments(segCounts, stations);
       renderTopStations(stationStats, stations);
-      renderTopLines(filtered);
+      renderTopLines(filtered, routes);
       renderCars(filtered);
       renderTopHoods(stationStats, stations);
       renderChart(filtered);
@@ -292,7 +354,7 @@ async function main() {
     toEl.addEventListener("change", () => refresh());
     refresh();
 
-    setupReplay(map, expanded, segments, render);
+    setupReplay(map, expanded, segments, render, stations);
   });
 }
 
@@ -302,7 +364,7 @@ function emptyFc() {
 
 // Cumulative playback, one frame per trip in date order. Camera fits the
 // full extent once at play start, then stays put so frames don't lurch.
-function setupReplay(map, expanded, segments, render) {
+function setupReplay(map, expanded, segments, render, stations) {
   const playBtn = document.getElementById("replay-play");
   const slider = document.getElementById("replay-slider");
   const dateEl = document.getElementById("replay-date");
@@ -316,16 +378,37 @@ function setupReplay(map, expanded, segments, render) {
   const { segCounts } = aggregate(trips);
   for (const key of segCounts.keys()) for (const c of segments[key]) allBounds.extend(c);
 
+  // Frame index at which each station is first boarded or exited, for the
+  // first-visit flash.
+  const firstVisit = new Map();
+  trips.forEach((t, i) => {
+    for (const id of [t.startId, t.endId]) {
+      if (!firstVisit.has(id)) firstVisit.set(id, i);
+    }
+  });
+  const setFlash = (i) => {
+    const features = [...firstVisit.entries()]
+      .filter(([, f]) => f === i)
+      .map(([id]) => ({
+        type: "Feature",
+        geometry: { type: "Point", coordinates: [stations[id].lon, stations[id].lat] },
+        properties: {},
+      }));
+    map.getSource("flash").setData({ type: "FeatureCollection", features });
+  };
+
   let timer = null;
   const showFrame = (i) => {
     slider.value = i;
     dateEl.textContent = `${trips[i].date} \u00b7 ${i + 1}/${trips.length}`;
     render(trips.slice(0, i + 1), false);
+    setFlash(i);
   };
   const stop = () => {
     clearInterval(timer);
     timer = null;
     playBtn.innerHTML = "&#9654;";
+    map.getSource("flash").setData({ type: "FeatureCollection", features: [] });
   };
   const play = () => {
     let i = Number(slider.value);
@@ -387,11 +470,13 @@ function renderCoverage(expanded, segments, stations) {
     .join("");
 }
 
-function renderTotals(filtered, segCounts, stationStats) {
+function renderTotals(filtered, segCounts, stationStats, distKm, longestKm) {
   const rows = [
     ["Trips", filtered.length],
     ["Segments ridden", segCounts.size],
     ["Stations touched", stationStats.size],
+    ["Distance ridden", `${distKm.toFixed(1)} km`],
+    ["Longest trip", `${longestKm.toFixed(1)} km`],
   ];
   document.getElementById("totals").innerHTML = rows
     .map(([k, v]) => `<div class="stat-row"><span>${k}</span><span class="value">${v}</span></div>`)
@@ -499,15 +584,23 @@ function renderChart(filtered) {
     `${keys[keys.length - 1]}</text></svg>`;
 }
 
-function renderTopLines(filtered) {
-  const counts = new Map();
-  for (const t of filtered) counts.set(t.route, (counts.get(t.route) || 0) + 1);
+function renderTopLines(filtered, routes) {
+  const counts = new Map(); // routeKey -> {n, label}
+  for (const t of filtered) {
+    if (!counts.has(t.routeKey)) counts.set(t.routeKey, { n: 0, label: t.route });
+    counts.get(t.routeKey).n += 1;
+  }
   const top = [...counts.entries()]
-    .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
+    .sort((a, b) => b[1].n - a[1].n || a[1].label.localeCompare(b[1].label))
     .slice(0, 8);
   document.getElementById("top-lines").innerHTML = top
-    .map(([route, n]) =>
-      `<div><span class="count">${n}\u00d7</span> ${route}</div>`)
+    .map(([key, { n, label }]) => {
+      const r = routes[key] || {};
+      const bg = r.color || "#3a3d44";
+      const fg = r.textColor || "#ffffff";
+      return `<div><span class="count">${n}\u00d7</span> ` +
+        `<span class="line-chip" style="background:${bg};color:${fg}">${label}</span></div>`;
+    })
     .join("");
 }
 
