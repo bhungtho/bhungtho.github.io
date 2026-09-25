@@ -72,10 +72,11 @@
     }
     .bar-fill { height: 100%; background: #e83e9c; border-radius: 3px; }
     .cov-sys { font-size: 12px; font-weight: 600; color: #b8bec8; margin-top: 10px; }
-    #top-segments, #top-stations, #top-lines, #top-hoods, #top-cars { font-size: 12px; }
-    #top-segments div, #top-stations div, #top-lines div, #top-hoods div, #top-cars div { padding: 2px 0; }
-    #top-segments .count, #top-stations .count, #top-lines .count, #top-hoods .count, #top-cars .count { color: #ff8ac4; font-variant-numeric: tabular-nums; }
-    #top-cars .dim { color: #8b919c; }
+    #top-segments, #top-stations, #top-lines, #top-hoods, #top-cars, #car-classes { font-size: 12px; }
+    #top-segments div, #top-stations div, #top-lines div, #top-hoods div, #top-cars div, #car-classes div { padding: 2px 0; }
+    #top-segments .count, #top-stations .count, #top-lines .count, #top-hoods .count, #top-cars .count, #car-classes .count { color: #ff8ac4; font-variant-numeric: tabular-nums; }
+    #top-cars .dim, #car-classes .dim { color: #8b919c; }
+    #car-classes { margin-top: 6px; border-top: 1px solid #2a2d34; padding-top: 4px; }
     .line-chip {
       display: inline-block; min-width: 14px; padding: 1px 6px;
       border-radius: 9px; font-size: 11px; font-weight: 600; text-align: center;
@@ -167,6 +168,7 @@
       </details>
       <details open><summary>Cars</summary>
         <div id="car-stats"></div>
+        <div id="car-classes"></div>
         <div id="top-cars"></div>
       </details>
       <details open><summary>Neighborhoods</summary>

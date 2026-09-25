@@ -54,11 +54,12 @@ toggleEl.addEventListener("click", () =>
 if (window.matchMedia("(max-width: 640px)").matches) setPanelHidden(true);
 
 async function main() {
-  const [stations, routes, variants, segments, overrides, tripsText] = await Promise.all([
+  const [stations, routes, variants, segments, carClasses, overrides, tripsText] = await Promise.all([
     fetchJson("data/stations.json"),
     fetchJson("data/routes.json"),
     fetchJson("data/variants.json"),
     fetchJson("data/segments.json"),
+    fetchJson("car_classes.json").catch(() => ({})),
     fetchJson("name_overrides.json").catch(() => ({})),
     fetch(TRIPS_URL).then((r) => {
       if (!r.ok) throw new Error(`${TRIPS_URL}: HTTP ${r.status}`);
@@ -333,7 +334,7 @@ async function main() {
       renderTopSegments(segCounts, stations);
       renderTopStations(stationStats, stations);
       renderTopLines(filtered, routes);
-      renderCars(filtered);
+      renderCars(filtered, carClasses);
       renderTopHoods(stationStats, stations);
       renderChart(filtered);
 
@@ -604,8 +605,17 @@ function renderTopLines(filtered, routes) {
     .join("");
 }
 
-function renderCars(filtered) {
+function carClassOf(carClasses, sys, car) {
+  const n = Number(car);
+  for (const [lo, hi, name] of carClasses[sys] || []) {
+    if (n >= lo && n <= hi) return name;
+  }
+  return null;
+}
+
+function renderCars(filtered, carClasses) {
   const cars = new Map(); // car -> {count, routes: Set}
+  const classes = new Map(); // class -> {rides, cars: Set}
   let logged = 0;
   for (const t of filtered) {
     if (!t.car) continue;
@@ -614,13 +624,26 @@ function renderCars(filtered) {
     const c = cars.get(t.car);
     c.count += 1;
     c.routes.add(t.route);
+    const cls = carClassOf(carClasses, t.sys, t.car) || "unknown";
+    if (!classes.has(cls)) classes.set(cls, { rides: 0, cars: new Set() });
+    classes.get(cls).rides += 1;
+    classes.get(cls).cars.add(t.car);
   }
   const rows = [
     ["Rides with car logged", logged],
     ["Unique cars", cars.size],
+    ["Classes ridden", [...classes.keys()].filter((c) => c !== "unknown").length],
   ];
   document.getElementById("car-stats").innerHTML = rows
     .map(([k, v]) => `<div class="stat-row"><span>${k}</span><span class="value">${v}</span></div>`)
+    .join("");
+  document.getElementById("car-classes").innerHTML = [...classes.entries()]
+    .sort((a, b) => b[1].rides - a[1].rides || a[0].localeCompare(b[0]))
+    .map(([cls, c]) => {
+      const n = c.cars.size;
+      return `<div><span class="count">${c.rides}\u00d7</span> ${cls} ` +
+        `<span class="dim">(${n} car${n === 1 ? "" : "s"})</span></div>`;
+    })
     .join("");
   const repeats = [...cars.entries()]
     .filter(([, c]) => c.count > 1)
