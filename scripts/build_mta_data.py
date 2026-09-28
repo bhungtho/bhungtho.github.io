@@ -527,17 +527,23 @@ def main():
         print(f"WARNING: ambiguous route aliases (will error at resolve time): {collisions}")
 
     os.makedirs(OUT_DIR, exist_ok=True)
-    for name, data in [
-        ("stations.json", all_stations),
-        ("routes.json", all_routes),
-        ("variants.json", all_variants),
-        ("segments.json", all_segments),
-        ("hoods.json", hoods_fc),
-        ("hood_borders.json", borders_fc),
+    # Lookup tables are indented for readability; pure geometry stays compact
+    # (indenting coordinate arrays triples the size and is unreadable anyway).
+    for name, data, pretty in [
+        ("stations.json", all_stations, True),
+        ("routes.json", all_routes, True),
+        ("variants.json", all_variants, True),
+        ("segments.json", all_segments, False),
+        ("hoods.json", hoods_fc, False),
+        ("hood_borders.json", borders_fc, False),
     ]:
         path = os.path.join(OUT_DIR, name)
         with open(path, "w") as f:
-            json.dump(data, f, separators=(",", ":"))
+            if pretty:
+                json.dump(data, f, indent=2, sort_keys=True)
+                f.write("\n")
+            else:
+                json.dump(data, f, separators=(",", ":"))
         print(f"wrote {path} ({os.path.getsize(path) // 1024} KB)")
 
 
