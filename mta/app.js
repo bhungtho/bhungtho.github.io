@@ -340,9 +340,8 @@ async function main() {
       renderChart(filtered);
 
       if (fit && segFeatures.length) {
-        const bounds = new maplibregl.LngLatBounds();
-        for (const f of segFeatures) for (const c of f.geometry.coordinates) bounds.extend(c);
-        map.fitBounds(bounds, { padding: 60, maxZoom: 13, duration: 400 });
+        map.fitBounds(focusBounds(segFeatures.map((f) => f.properties.key), segments),
+          { padding: 60, maxZoom: 13, duration: 400 });
       }
     };
 
@@ -364,6 +363,18 @@ function emptyFc() {
   return { type: "FeatureCollection", features: [] };
 }
 
+// Camera framing stays on the city: fit to subway/PATH/ferry segments and let
+// commuter rail run off-screen. Falls back to everything if none are ridden.
+const CITY_SYSTEMS = new Set(["sub", "path", "fer"]);
+function focusBounds(segKeys, segments) {
+  const city = segKeys.filter((k) => CITY_SYSTEMS.has(k.split(":")[0]));
+  const bounds = new maplibregl.LngLatBounds();
+  for (const key of city.length ? city : segKeys) {
+    for (const c of segments[key]) bounds.extend(c);
+  }
+  return bounds;
+}
+
 // Cumulative playback, one frame per trip in date order. Camera fits the
 // full extent once at play start, then stays put so frames don't lurch.
 function setupReplay(map, expanded, segments, render, stations) {
@@ -376,9 +387,8 @@ function setupReplay(map, expanded, segments, render, stations) {
   slider.max = trips.length - 1;
   slider.value = trips.length - 1;
 
-  const allBounds = new maplibregl.LngLatBounds();
   const { segCounts } = aggregate(trips);
-  for (const key of segCounts.keys()) for (const c of segments[key]) allBounds.extend(c);
+  const allBounds = focusBounds([...segCounts.keys()], segments);
 
   // Frame index at which each station is first boarded or exited, for the
   // first-visit flash.
