@@ -91,6 +91,14 @@
       background: #22252c; color: #d7dae0; border: 1px solid #3a3d44;
       border-radius: 4px;
     }
+    .btn-row { display: flex; gap: 6px; margin-top: 6px; }
+    .hint { font-size: 11px; color: #8b919c; margin: 4px 0 6px; line-height: 1.45; }
+    .hint b { color: #b8bec8; }
+    input[type="url"] {
+      width: 100%; padding: 5px 6px; font-size: 11px;
+      background: #22252c; color: #d7dae0; border: 1px solid #2a2d34; border-radius: 4px;
+    }
+    #sheet-status a { color: #ff8ac4; }
     #raw-modal {
       position: fixed; inset: 0; z-index: 30; background: rgba(0, 0, 0, 0.65);
       display: flex; align-items: center; justify-content: center;
@@ -185,6 +193,19 @@
       </details>
       <details open><summary>Trip log</summary>
         <button id="raw-open" class="panel-btn">View raw data</button>
+      </details>
+      <details><summary>Use your own sheet</summary>
+        <p class="hint">
+          Publish a Google Sheet (File &rsaquo; Share &rsaquo; Publish to web, as CSV)
+          with columns <b>date, start, end, line</b>, plus optional <b>via</b> station
+          and <b>car number</b>. Paste the published CSV link:
+        </p>
+        <input type="url" id="sheet-url" placeholder="https://docs.google.com/spreadsheets/d/e/.../pub?output=csv" />
+        <div class="btn-row">
+          <button id="sheet-load" class="panel-btn">Load</button>
+          <button id="sheet-reset" class="panel-btn">Reset to default</button>
+        </div>
+        <div id="sheet-status" class="hint"></div>
       </details>
     </div>
     <div id="map"></div>

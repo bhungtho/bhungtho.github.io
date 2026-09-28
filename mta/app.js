@@ -8,8 +8,21 @@ const SYSTEM_NAMES = {
   path: "PATH", fer: "NYC Ferry",
 };
 
-// Published Google Sheet CSV; set to "trips.csv" to read the local file.
-const TRIPS_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSPfB_5luHDgpaQer4fOnS6B6gbyHzfHH1E9sLjSYjkBYtPaLmZxoQM0alZpbf-YT4rMX1ML4KSDt9H/pub?gid=0&single=true&output=csv";
+// Default trip source: the site owner's published Google Sheet CSV.
+const DEFAULT_TRIPS_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSPfB_5luHDgpaQer4fOnS6B6gbyHzfHH1E9sLjSYjkBYtPaLmZxoQM0alZpbf-YT4rMX1ML4KSDt9H/pub?gid=0&single=true&output=csv";
+
+// Resolution order: ?sheet= param (shareable links) > localStorage (a
+// visitor's own saved sheet) > default. Only https URLs are accepted since
+// the value ends up in a fetch.
+function resolveTripsUrl() {
+  const fromParam = new URLSearchParams(location.search).get("sheet");
+  const fromStorage = localStorage.getItem("tripsUrl");
+  for (const candidate of [fromParam, fromStorage]) {
+    if (candidate && /^https:\/\//i.test(candidate)) return candidate;
+  }
+  return DEFAULT_TRIPS_URL;
+}
+const TRIPS_URL = resolveTripsUrl();
 
 const BASEMAP = "https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json";
 
@@ -29,6 +42,34 @@ async function fetchJson(url) {
 }
 
 let visitedHoods = [];
+
+// Sheet-source controls. Loading a new sheet reloads the page with ?sheet=
+// so the URL is shareable; the choice also persists in localStorage.
+(function setupSheetControls() {
+  const input = document.getElementById("sheet-url");
+  const status = document.getElementById("sheet-status");
+  const details = input.closest("details");
+  const usingCustom = TRIPS_URL !== DEFAULT_TRIPS_URL;
+  if (usingCustom) {
+    input.value = TRIPS_URL;
+    details.open = true;
+    const share = `${location.origin}${location.pathname}?sheet=${encodeURIComponent(TRIPS_URL)}`;
+    status.innerHTML = `Showing a custom sheet. <a href="${share}">Shareable link</a>`;
+  }
+  document.getElementById("sheet-load").addEventListener("click", () => {
+    const url = input.value.trim();
+    if (!/^https:\/\//i.test(url)) {
+      status.textContent = "Enter an https:// link to a published CSV.";
+      return;
+    }
+    localStorage.setItem("tripsUrl", url);
+    location.search = `?sheet=${encodeURIComponent(url)}`;
+  });
+  document.getElementById("sheet-reset").addEventListener("click", () => {
+    localStorage.removeItem("tripsUrl");
+    location.href = location.pathname;
+  });
+})();
 
 const COS_LAT = Math.cos((40.73 * Math.PI) / 180);
 function lineKm(coords) {
@@ -705,8 +746,7 @@ function renderTopHoods(stationStats, stations) {
 }
 
 function setupRawTable(trips, expanded, tripErrors) {
-  const esc = (s) => String(s ?? "").replace(/[&<>"]/g,
-    (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+  const esc = escapeHtml;
   const errByTrip = new Map(tripErrors.map((e) => [e.trip, e.error]));
   const queue = [...expanded]; // same order as trips, minus errored rows
   const rows = trips.map((t) => {
@@ -736,6 +776,11 @@ function setupRawTable(trips, expanded, tripErrors) {
   });
 }
 
+function escapeHtml(s) {
+  return String(s ?? "").replace(/[&<>"]/g,
+    (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+}
+
 function renderErrors(parseErrors, tripErrors) {
   const el = document.getElementById("errors");
   const items = [
@@ -744,12 +789,17 @@ function renderErrors(parseErrors, tripErrors) {
       `${e.trip.date} ${e.trip.start} \u2192 ${e.trip.end} (${e.trip.route}): ${e.error}`),
   ];
   el.innerHTML = items.length
-    ? items.map((m) => `<div class="err">${m}</div>`).join("")
+    ? items.map((m) => `<div class="err">${escapeHtml(m)}</div>`).join("")
     : `<div class="ok">All trips resolved.</div>`;
 }
 
 main().catch((err) => {
+  const custom = TRIPS_URL !== DEFAULT_TRIPS_URL;
+  const hint = custom
+    ? ` Check that the sheet is published to the web as CSV (File \u203a Share \u203a Publish to web), or use "Reset to default".`
+    : "";
   document.getElementById("errors").innerHTML =
-    `<div class="err">Failed to load: ${err.message}</div>`;
+    `<div class="err">Failed to load: ${err.message}${hint}</div>`;
+  if (custom) document.getElementById("sheet-url").closest("details").open = true;
   console.error(err);
 });
