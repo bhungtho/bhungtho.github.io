@@ -274,7 +274,7 @@ async function main() {
       source: "flash",
       paint: {
         "circle-radius": ["interpolate", ["linear"], ["zoom"], 8, 7, 11, 13, 14, 18],
-        "circle-color": "#ffb1dd",
+        "circle-color": PALETTES[paletteKey].stops[7],
         "circle-opacity": 0.35,
         "circle-stroke-color": "#ffffff",
         "circle-stroke-width": 1.5,
@@ -665,7 +665,7 @@ function renderChart(filtered) {
     if (!c) return "";
     const h = Math.max(2, (c / max) * H);
     return `<rect x="${(i * bw + 0.5).toFixed(1)}" y="${(H - h).toFixed(1)}"` +
-      ` width="${Math.max(1, bw - 1).toFixed(1)}" height="${h.toFixed(1)}" fill="#e83e9c">` +
+      ` width="${Math.max(1, bw - 1).toFixed(1)}" height="${h.toFixed(1)}" fill="${PALETTES[paletteKey].accent}">` +
       `<title>${prefix}${k}: ${c} ride${c === 1 ? "" : "s"}</title></rect>`;
   }).join("");
   el.innerHTML =
