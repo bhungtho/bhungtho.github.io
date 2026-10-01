@@ -26,20 +26,59 @@ const TRIPS_URL = resolveTripsUrl();
 
 const BASEMAP = "https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json";
 
-// [fraction, color] stops, dim -> bright; fractions are log-scaled ride
-// counts. Color is the only encoding of ride count (width is zoom-only), so
-// the ramp spans a wide brightness range with many stops.
-const HEAT_RAMP = [
-  [0, "#4a0c33"],
-  [0.125, "#6e1449"],
-  [0.25, "#931c61"],
-  [0.375, "#b8277a"],
-  [0.5, "#dc3b96"],
-  [0.625, "#f05eae"],
-  [0.75, "#fb82c4"],
-  [0.875, "#ffa6d8"],
-  [1, "#ffd0ec"],
-];
+// Heat palettes: 9 stops each, dim -> bright, since color is the only
+// encoding of ride count (width is zoom-only). Fractions are log-scaled.
+// Blue is deliberately absent: the unridden-track backdrop is steel blue.
+// `accent` tints the panel's bars and counts to match.
+const PALETTES = {
+  magenta: {
+    label: "Magenta",
+    accent: "#e83e9c",
+    stops: ["#4a0c33", "#6e1449", "#931c61", "#b8277a", "#dc3b96",
+            "#f05eae", "#fb82c4", "#ffa6d8", "#ffd0ec"],
+  },
+  ember: {
+    label: "Ember",
+    accent: "#f0742a",
+    stops: ["#4a1205", "#6e1f08", "#942d0c", "#ba3f12", "#dd561d",
+            "#f0742a", "#fb9647", "#ffb86e", "#ffdca8"],
+  },
+  mint: {
+    label: "Mint",
+    accent: "#2fcf8a",
+    stops: ["#053a26", "#0a5436", "#0f6e47", "#15895a", "#1ea86e",
+            "#2fcf8a", "#5de3a6", "#95f1c5", "#cefbe3"],
+  },
+  gold: {
+    label: "Gold",
+    accent: "#e2b100",
+    stops: ["#3f2d00", "#5e4300", "#7e5a00", "#9f7300", "#c08f00",
+            "#e2b100", "#f5cc30", "#ffe070", "#fff2b8"],
+  },
+};
+const paletteKey = (() => {
+  const saved = localStorage.getItem("palette");
+  return PALETTES[saved] ? saved : "magenta";
+})();
+const HEAT_RAMP = PALETTES[paletteKey].stops.map((c, i) => [i / 8, c]);
+document.documentElement.style.setProperty("--accent", PALETTES[paletteKey].accent);
+
+// Palette picker. Changing it reloads so every layer and accent rebuilds
+// from one source of truth rather than patching styles live.
+(function setupPaletteSelect() {
+  const sel = document.getElementById("palette-select");
+  for (const [key, p] of Object.entries(PALETTES)) {
+    const opt = document.createElement("option");
+    opt.value = key;
+    opt.textContent = p.label;
+    sel.appendChild(opt);
+  }
+  sel.value = paletteKey;
+  sel.addEventListener("change", () => {
+    localStorage.setItem("palette", sel.value);
+    location.reload();
+  });
+})();
 
 async function fetchJson(url) {
   const r = await fetch(url);
@@ -192,7 +231,7 @@ async function main() {
           type: "fill",
           source: "hoods",
           filter: ["in", ["get", "hood"], ["literal", visitedHoods]],
-          paint: { "fill-color": "#e83e9c", "fill-opacity": 0.08 },
+          paint: { "fill-color": PALETTES[paletteKey].accent, "fill-opacity": 0.08 },
         }, "network"); // beneath all linework
         map.addLayer({
           id: "hood-borders",

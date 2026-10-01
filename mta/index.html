@@ -6,6 +6,7 @@
   <title>MTA Trip Heat Map</title>
   <link href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" rel="stylesheet" />
   <style>
+    :root { --accent: #e83e9c; }
     * { box-sizing: border-box; }
     html, body { margin: 0; height: 100%; font-family: -apple-system, "Helvetica Neue", sans-serif; }
     #app { display: flex; height: 100%; }
@@ -47,7 +48,7 @@
       display: flex; align-items: center; gap: 6px; margin: 4px 0 8px;
       color: #d7dae0; cursor: pointer;
     }
-    label.check input { accent-color: #e83e9c; }
+    label.check input { accent-color: var(--accent); }
     input[type="date"] {
       width: 100%; margin-top: 2px; padding: 4px 6px; font-size: 13px;
       background: #22252c; color: #d7dae0; border: 1px solid #2a2d34; border-radius: 4px;
@@ -58,7 +59,7 @@
       background: #22252c; color: #d7dae0; border: 1px solid #3a3d44;
       border-radius: 4px; cursor: pointer;
     }
-    #replay input[type="range"] { flex: 1; min-width: 0; accent-color: #e83e9c; }
+    #replay input[type="range"] { flex: 1; min-width: 0; accent-color: var(--accent); }
     #replay-date { font-size: 11px; color: #8b919c; min-width: 74px; text-align: right; }
     #errors { font-size: 12px; }
     #errors .err {
@@ -70,11 +71,11 @@
       height: 5px; margin: 3px 0 8px; border-radius: 3px;
       background: #2a2d34; overflow: hidden;
     }
-    .bar-fill { height: 100%; background: #e83e9c; border-radius: 3px; }
+    .bar-fill { height: 100%; background: var(--accent); border-radius: 3px; }
     .cov-sys { font-size: 12px; font-weight: 600; color: #b8bec8; margin-top: 10px; }
     #top-segments, #top-stations, #top-lines, #top-hoods, #top-cars, #car-classes { font-size: 12px; }
     #top-segments div, #top-stations div, #top-lines div, #top-hoods div, #top-cars div, #car-classes div { padding: 2px 0; }
-    #top-segments .count, #top-stations .count, #top-lines .count, #top-hoods .count, #top-cars .count, #car-classes .count { color: #ff8ac4; font-variant-numeric: tabular-nums; }
+    #top-segments .count, #top-stations .count, #top-lines .count, #top-hoods .count, #top-cars .count, #car-classes .count { color: var(--accent); font-variant-numeric: tabular-nums; }
     #top-cars .dim, #car-classes .dim { color: #8b919c; }
     .sub-head {
       font-size: 10px; text-transform: uppercase; letter-spacing: 0.07em;
@@ -94,11 +95,15 @@
     .btn-row { display: flex; gap: 6px; margin-top: 6px; }
     .hint { font-size: 11px; color: #8b919c; margin: 4px 0 6px; line-height: 1.45; }
     .hint b { color: #b8bec8; }
+    select {
+      width: 100%; margin-top: 2px; padding: 4px 6px; font-size: 13px;
+      background: #22252c; color: #d7dae0; border: 1px solid #2a2d34; border-radius: 4px;
+    }
     input[type="url"] {
       width: 100%; padding: 5px 6px; font-size: 11px;
       background: #22252c; color: #d7dae0; border: 1px solid #2a2d34; border-radius: 4px;
     }
-    #sheet-status a { color: #ff8ac4; }
+    #sheet-status a { color: var(--accent); }
     #raw-modal {
       position: fixed; inset: 0; z-index: 30; background: rgba(0, 0, 0, 0.65);
       display: flex; align-items: center; justify-content: center;
@@ -152,6 +157,11 @@
       <details open><summary>Date range</summary>
         <label>From <input type="date" id="date-from" /></label>
         <label>To <input type="date" id="date-to" /></label>
+      </details>
+      <details><summary>Appearance</summary>
+        <label>Heat color
+          <select id="palette-select"></select>
+        </label>
       </details>
       <details open><summary>Replay</summary>
         <div id="replay">
