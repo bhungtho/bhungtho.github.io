@@ -26,13 +26,19 @@ const TRIPS_URL = resolveTripsUrl();
 
 const BASEMAP = "https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json";
 
-// [fraction, color] stops, dim -> bright; fractions are log-scaled ride counts.
+// [fraction, color] stops, dim -> bright; fractions are log-scaled ride
+// counts. Color is the only encoding of ride count (width is zoom-only), so
+// the ramp spans a wide brightness range with many stops.
 const HEAT_RAMP = [
-  [0, "#6b1247"],
-  [0.25, "#a02070"],
-  [0.5, "#e83e9c"],
-  [0.75, "#ff7dc0"],
-  [1, "#ffb1dd"],
+  [0, "#4a0c33"],
+  [0.125, "#6e1449"],
+  [0.25, "#931c61"],
+  [0.375, "#b8277a"],
+  [0.5, "#dc3b96"],
+  [0.625, "#f05eae"],
+  [0.75, "#fb82c4"],
+  [0.875, "#ffa6d8"],
+  [1, "#ffd0ec"],
 ];
 
 async function fetchJson(url) {
@@ -211,18 +217,13 @@ async function main() {
       source: "segments",
       layout: { "line-cap": "round", "line-join": "round" },
       paint: {
-        "line-width": [
-          "interpolate", ["linear"], ["get", "frac"],
-          0, 2.5, 1, 9,
-        ],
+        // Width depends on zoom only; ride count is carried by color alone.
+        "line-width": ["interpolate", ["linear"], ["zoom"], 9, 2, 12, 4, 15, 7],
         "line-color": [
           "interpolate", ["linear"], ["get", "frac"],
           ...HEAT_RAMP.flat(),
         ],
-        "line-opacity": [
-          "interpolate", ["linear"], ["get", "frac"],
-          0, 0.65, 1, 1,
-        ],
+        "line-opacity": 0.95,
       },
     });
 
