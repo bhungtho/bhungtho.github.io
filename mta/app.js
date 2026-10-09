@@ -281,20 +281,21 @@ async function main() {
       },
     });
 
-    // Only visited stations are in the source; radius scales with both
-    // visit count and zoom so dots stay proportionate at regional extents.
+    // Only visited stations are in the source. Like segments, size depends on
+    // zoom only and visit count is carried by color. The dark ring keeps a
+    // bright dot distinguishable from the bright line it sits on.
     map.addLayer({
       id: "stations",
       type: "circle",
       source: "stations",
       paint: {
-        "circle-radius": [
-          "interpolate", ["linear"], ["zoom"],
-          8, ["interpolate", ["linear"], ["get", "visits"], 1, 1.5, 10, 3],
-          11, ["interpolate", ["linear"], ["get", "visits"], 1, 3, 10, 6],
-          14, ["interpolate", ["linear"], ["get", "visits"], 1, 5, 10, 9],
+        "circle-radius": ["interpolate", ["linear"], ["zoom"], 8, 2.5, 11, 4, 14, 6.5],
+        "circle-color": [
+          "interpolate", ["linear"], ["get", "frac"],
+          ...HEAT_RAMP.flat(),
         ],
-        "circle-color": "#ffffff",
+        "circle-stroke-color": "#0d0f13",
+        "circle-stroke-width": ["interpolate", ["linear"], ["zoom"], 8, 0.75, 14, 1.5],
       },
     });
 
@@ -347,6 +348,12 @@ async function main() {
       1, ...[...aggregate(expanded).segCounts.values()].map((v) => v.count));
     const frac = (count) =>
       allTimeMax > 1 ? Math.log(count) / Math.log(allTimeMax) : 0.5;
+    // Same anchoring for stations, against the busiest station's all-time
+    // touches (boardings + exits + ride-throughs).
+    const allTimeMaxVisits = Math.max(1, ...[...aggregate(expanded).stationStats.values()]
+      .map((s) => s.board + s.alight + s.through));
+    const stationFrac = (visits) =>
+      allTimeMaxVisits > 1 ? Math.log(visits) / Math.log(allTimeMaxVisits) : 0.5;
 
     const render = (filtered, fit) => {
       const { segCounts, stationStats } = aggregate(filtered);
@@ -395,6 +402,7 @@ async function main() {
             name: s.name,
             used: !!st,
             visits: st ? st.board + st.alight + st.through : 0,
+            frac: st ? stationFrac(st.board + st.alight + st.through) : 0,
             board: st ? st.board : 0,
             alight: st ? st.alight : 0,
             through: st ? st.through : 0,
