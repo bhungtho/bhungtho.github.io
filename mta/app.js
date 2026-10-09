@@ -24,7 +24,28 @@ function resolveTripsUrl() {
 }
 const TRIPS_URL = resolveTripsUrl();
 
-const BASEMAP = "https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json";
+// Map themes. The panel follows via CSS variables (index.html); these are the
+// map-layer colors, which MapLibre can't read from CSS.
+const THEMES = {
+  dark: {
+    label: "Dark",
+    basemap: "https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json",
+    network: "#7d95b0", networkOpacity: 0.55,
+    hoodBorder: "#66788c", hoodBorderOpacity: 0.45, hoodFillOpacity: 0.08,
+    stationRing: "#0d0f13", flashStroke: "#ffffff",
+    chartAxis: "#3a3d44", chartLabel: "#8b919c",
+  },
+  light: {
+    label: "Light",
+    basemap: "https://basemaps.cartocdn.com/gl/positron-gl-style/style.json",
+    network: "#6f86a3", networkOpacity: 0.6,
+    hoodBorder: "#8a96a6", hoodBorderOpacity: 0.6, hoodFillOpacity: 0.12,
+    stationRing: "#ffffff", flashStroke: "#111318",
+    chartAxis: "#cfd3d9", chartLabel: "#6b7280",
+  },
+};
+const themeKey = localStorage.getItem("theme") === "light" ? "light" : "dark";
+const THEME = THEMES[themeKey];
 
 // Heat palettes: 9 stops each, dim -> bright, since color is the only
 // encoding of ride count (width is zoom-only). Fractions are log-scaled.
@@ -60,8 +81,43 @@ const paletteKey = (() => {
   const saved = localStorage.getItem("palette");
   return PALETTES[saved] ? saved : "magenta";
 })();
-const HEAT_RAMP = PALETTES[paletteKey].stops.map((c, i) => [i / 8, c]);
-document.documentElement.style.setProperty("--accent", PALETTES[paletteKey].accent);
+function mixHex(a, b, t) {
+  const pa = [1, 3, 5].map((i) => parseInt(a.slice(i, i + 2), 16));
+  const pb = [1, 3, 5].map((i) => parseInt(b.slice(i, i + 2), 16));
+  return "#" + pa.map((v, i) => Math.round(v + (pb[i] - v) * t)
+    .toString(16).padStart(2, "0")).join("");
+}
+// On a light map intensity reads as pale -> deep, the reverse of dark mode.
+// Starting from the palette's mid-tone (not its palest stop) keeps
+// once-ridden segments visible; the 6 source colors are resampled to 9 stops
+// so light mode has the same granularity.
+function lightStops(stops) {
+  const src = stops.slice(0, 6).reverse();
+  return Array.from({ length: 9 }, (_, i) => {
+    const pos = (i / 8) * (src.length - 1);
+    const k = Math.min(Math.floor(pos), src.length - 2);
+    return mixHex(src[k], src[k + 1], pos - k);
+  });
+}
+const PALETTE = PALETTES[paletteKey];
+const RAMP_STOPS = themeKey === "light" ? lightStops(PALETTE.stops) : PALETTE.stops;
+const HEAT_RAMP = RAMP_STOPS.map((c, i) => [i / 8, c]);
+document.documentElement.style.setProperty("--accent", PALETTE.accent);
+
+(function setupThemeSelect() {
+  const sel = document.getElementById("theme-select");
+  for (const [key, t] of Object.entries(THEMES)) {
+    const opt = document.createElement("option");
+    opt.value = key;
+    opt.textContent = t.label;
+    sel.appendChild(opt);
+  }
+  sel.value = themeKey;
+  sel.addEventListener("change", () => {
+    localStorage.setItem("theme", sel.value);
+    location.reload();
+  });
+})();
 
 // Palette picker. Changing it reloads so every layer and accent rebuilds
 // from one source of truth rather than patching styles live.
@@ -176,7 +232,7 @@ async function main() {
 
   const map = new maplibregl.Map({
     container: "map",
-    style: BASEMAP,
+    style: THEME.basemap,
     center: [-73.94, 40.73],
     zoom: 11,
     attributionControl: { compact: true },
@@ -204,10 +260,10 @@ async function main() {
       // No line-cap: round is incompatible with line-dasharray.
       layout: { "line-join": "round" },
       paint: {
-        "line-color": "#7d95b0",
+        "line-color": THEME.network,
         "line-width": ["interpolate", ["linear"], ["zoom"], 9, 1, 12, 1.8, 15, 3],
         "line-dasharray": [2, 2],
-        "line-opacity": 0.55,
+        "line-opacity": THEME.networkOpacity,
       },
     });
 
@@ -231,16 +287,16 @@ async function main() {
           type: "fill",
           source: "hoods",
           filter: ["in", ["get", "hood"], ["literal", visitedHoods]],
-          paint: { "fill-color": PALETTES[paletteKey].accent, "fill-opacity": 0.08 },
+          paint: { "fill-color": PALETTE.accent, "fill-opacity": THEME.hoodFillOpacity },
         }, "network"); // beneath all linework
         map.addLayer({
           id: "hood-borders",
           type: "line",
           source: "hood-borders",
           paint: {
-            "line-color": "#66788c",
+            "line-color": THEME.hoodBorder,
             "line-width": ["interpolate", ["linear"], ["zoom"], 9, 0.4, 13, 1],
-            "line-opacity": 0.45,
+            "line-opacity": THEME.hoodBorderOpacity,
           },
         }, "network");
       } else if (map.getLayer("hoods")) {
@@ -274,9 +330,9 @@ async function main() {
       source: "flash",
       paint: {
         "circle-radius": ["interpolate", ["linear"], ["zoom"], 8, 7, 11, 13, 14, 18],
-        "circle-color": PALETTES[paletteKey].stops[7],
+        "circle-color": themeKey === "light" ? PALETTE.accent : PALETTE.stops[7],
         "circle-opacity": 0.35,
-        "circle-stroke-color": "#ffffff",
+        "circle-stroke-color": THEME.flashStroke,
         "circle-stroke-width": 1.5,
       },
     });
@@ -294,7 +350,7 @@ async function main() {
           "interpolate", ["linear"], ["get", "frac"],
           ...HEAT_RAMP.flat(),
         ],
-        "circle-stroke-color": "#0d0f13",
+        "circle-stroke-color": THEME.stationRing,
         "circle-stroke-width": ["interpolate", ["linear"], ["zoom"], 8, 0.75, 14, 1.5],
       },
     });
@@ -332,7 +388,7 @@ async function main() {
       const shown = list.slice(0, 8).map((s) => `<div>${s}</div>`).join("");
       const more = list.length > 8 ? `<div>\u2026 +${list.length - 8} more</div>` : "";
       popup.setLngLat(e.lngLat)
-        .setHTML(`<b>${p.name}</b><br>${p.count} ride${p.count === 1 ? "" : "s"} · ${p.routes}<hr style="border-color:#3a3d44;margin:4px 0">${shown}${more}`)
+        .setHTML(`<b>${p.name}</b><br>${p.count} ride${p.count === 1 ? "" : "s"} · ${p.routes}<hr>${shown}${more}`)
         .addTo(map);
     });
     map.on("click", "stations", stationPopup);
@@ -679,9 +735,9 @@ function renderChart(filtered) {
   el.innerHTML =
     `<svg viewBox="0 0 ${W} ${H + LBL}" xmlns="http://www.w3.org/2000/svg">` +
     bars +
-    `<line x1="0" y1="${H + 0.5}" x2="${W}" y2="${H + 0.5}" stroke="#3a3d44"/>` +
-    `<text x="0" y="${H + LBL - 1}" font-size="8" fill="#8b919c">${keys[0]}</text>` +
-    `<text x="${W}" y="${H + LBL - 1}" font-size="8" fill="#8b919c" text-anchor="end">` +
+    `<line x1="0" y1="${H + 0.5}" x2="${W}" y2="${H + 0.5}" stroke="${THEME.chartAxis}"/>` +
+    `<text x="0" y="${H + LBL - 1}" font-size="8" fill="${THEME.chartLabel}">${keys[0]}</text>` +
+    `<text x="${W}" y="${H + LBL - 1}" font-size="8" fill="${THEME.chartLabel}" text-anchor="end">` +
     `${keys[keys.length - 1]}</text></svg>`;
 }
 

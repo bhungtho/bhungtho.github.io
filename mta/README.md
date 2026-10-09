@@ -196,18 +196,45 @@ sheets can be loaded.
 Publishing a sheet: File > Share > Publish to web, choose the tab, choose
 CSV. The published URL is public to anyone who has it.
 
+## Appearance
+
+The panel's Appearance section has two settings, both saved in
+`localStorage` and applied by reloading the page:
+
+- **Map theme** (Dark / Light): the basemap, map-layer colors, and the panel.
+- **Heat color** (Magenta / Ember / Mint / Gold): the heat ramp plus the
+  panel accents (bars, counts, sliders) and neighborhood fill.
+
+Ride count is encoded by color only. Segment width and station dot size
+depend on zoom, not count. Counts are log-scaled and anchored to the
+all-time max, so a color means the same count under any date filter and
+only brightens during replay. Segments and stations use the same ramp, each
+scaled against its own all-time max.
+
+Intensity runs in opposite directions per theme: dim to bright on the dark
+map, pale to deep on the light map. Each palette defines its 9 dark-mode
+stops; the light ramp is derived from them (`lightStops`), starting at the
+palette's mid-tone so once-ridden segments stay visible on a white map.
+
+To add a palette, add an entry to `PALETTES` in `app.js`: a label, an
+`accent` color for the panel, and 9 stops from dim to bright. Avoid blue,
+since the unridden-track backdrop is steel blue.
+
 ## Tuning knobs
 
 All in `web/app.js` unless noted.
 
-- `HEAT_RAMP`: intensity colors, dim to bright. Intensity is log-scaled and
-  anchored to the all-time max so a color means the same count under any
-  filter and only brightens during replay.
+- `PALETTES`: heat colors (see Appearance).
+- `THEMES`: per-theme basemap and map-layer colors: backdrop track,
+  neighborhood borders and fill opacity, station dot ring, replay halo,
+  chart axis. The panel's colors are CSS variables at the top of
+  `index.html` (`:root` for dark, `:root.light` for light).
 - `CITY_SYSTEMS`: which systems the camera frames on load.
-- `network` layer: unridden-track backdrop style (dashed steel blue).
-- `hoods` / `hood-borders` layers: neighborhood overlay opacity.
+- `network` layer: unridden-track backdrop style (dashed).
+- `hoods` / `hood-borders` layers: neighborhood overlay.
 - Replay interval: the `700` (ms) in `setupReplay`.
-- Station dot sizes: the zoom-keyed `circle-radius` in the `stations` layer.
+- Line width and station dot size: the zoom-keyed `line-width` in the
+  `segments` layer and `circle-radius` in the `stations` layer.
 - Chart bucketing switches from weekly to monthly past 104 weeks
   (`renderChart`).
 
