@@ -35,7 +35,8 @@ Tag each leg with the purpose of the whole journey (both legs of an N-to-7
 transfer on the way to work are Commute). The five known categories are in
 `KNOWN_PURPOSES` in `heatmap-core.js`. Capitalization doesn't matter. Any
 other label still counts, as its own category, and gets a note in Data
-issues so typos are visible. Rows left blank show as "Unlabeled".
+issues so typos are visible. Rows left blank are "Unlabeled": they have their own filter checkbox but are
+left out of the purpose breakdown, whose shares are of labeled trips only.
 
 Purpose drives the checkboxes under Filters (which narrow the map and every
 stat, alongside the date range) and the trips-and-distance breakdown under

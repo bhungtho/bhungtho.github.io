@@ -683,19 +683,19 @@ function renderTotals(filtered, segCounts, stationStats, distKm, longestKm, byPu
     ["Distance ridden", `${distKm.toFixed(1)} km`],
     ["Longest trip", `${longestKm.toFixed(1)} km`],
   ];
-  const anyLabeled = [...byPurpose.keys()].some((p) => p !== UNLABELED);
-  const purposeRows = anyLabeled
-    ? [...byPurpose.entries()]
-      .sort((a, b) => (a[0] === UNLABELED) - (b[0] === UNLABELED) ||
-        b[1].trips - a[1].trips || a[0].localeCompare(b[0]))
-      .map(([p, v]) => [escapeHtml(p),
-        `${v.trips} (${((100 * v.trips) / filtered.length).toFixed(0)}%) \u00b7 ${v.km.toFixed(1)} km`])
-    : [];
+  // Unlabeled trips are left out; shares are of labeled trips only.
+  const labeled = [...byPurpose.entries()].filter(([p]) => p !== UNLABELED);
+  const labeledTrips = labeled.reduce((n, [, v]) => n + v.trips, 0);
+  const purposeRows = labeled
+    .sort((a, b) => b[1].trips - a[1].trips || a[0].localeCompare(b[0]))
+    .map(([p, v]) => [escapeHtml(p),
+      `${v.trips} (${((100 * v.trips) / labeledTrips).toFixed(0)}%) \u00b7 ${v.km.toFixed(1)} km`]);
   const row = ([k, v]) =>
     `<div class="stat-row"><span>${k}</span><span class="value">${v}</span></div>`;
   document.getElementById("totals").innerHTML = rows.map(row).join("") +
     (purposeRows.length
-      ? `<div class="sub-head">Trips by purpose</div>` + purposeRows.map(row).join("")
+      ? `<div class="sub-head">Trips by purpose \u00b7 ${labeledTrips} labeled</div>` +
+        purposeRows.map(row).join("")
       : "");
 }
 
