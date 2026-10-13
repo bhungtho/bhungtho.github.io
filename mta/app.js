@@ -684,19 +684,68 @@ function renderTotals(filtered, segCounts, stationStats, distKm, longestKm, byPu
     ["Longest trip", `${longestKm.toFixed(1)} km`],
   ];
   // Unlabeled trips are left out; shares are of labeled trips only.
-  const labeled = [...byPurpose.entries()].filter(([p]) => p !== UNLABELED);
+  const labeled = [...byPurpose.entries()]
+    .filter(([p]) => p !== UNLABELED)
+    .sort((a, b) => b[1].trips - a[1].trips || a[0].localeCompare(b[0]));
   const labeledTrips = labeled.reduce((n, [, v]) => n + v.trips, 0);
-  const purposeRows = labeled
-    .sort((a, b) => b[1].trips - a[1].trips || a[0].localeCompare(b[0]))
-    .map(([p, v]) => [escapeHtml(p),
-      `${v.trips} (${((100 * v.trips) / labeledTrips).toFixed(0)}%) \u00b7 ${v.km.toFixed(1)} km`]);
   const row = ([k, v]) =>
     `<div class="stat-row"><span>${k}</span><span class="value">${v}</span></div>`;
+  const purposeRows = labeled.map(([p, v]) => row([
+    `<span class="swatch" style="background:${purposeColor(p)}"></span>${escapeHtml(p)}`,
+    `${v.trips} (${((100 * v.trips) / labeledTrips).toFixed(0)}%) \u00b7 ${v.km.toFixed(1)} km`,
+  ]));
   document.getElementById("totals").innerHTML = rows.map(row).join("") +
-    (purposeRows.length
+    (labeled.length
       ? `<div class="sub-head">Trips by purpose \u00b7 ${labeledTrips} labeled</div>` +
-        purposeRows.map(row).join("")
+        purposeDonut(labeled, labeledTrips) + purposeRows.join("")
       : "");
+}
+
+// Fixed color per purpose (Okabe-Ito, color-blind-safe, readable on both
+// themes). Labels outside the known five take the spare colors in order.
+const PURPOSE_COLORS = {
+  Commute: "#0072B2", Errand: "#E69F00", Social: "#CC79A7",
+  Leisure: "#009E73", Travel: "#56B4E9",
+};
+const SPARE_PURPOSE_COLORS = ["#D55E00", "#F0E442", "#999999"];
+const sparePurposeColor = new Map();
+function purposeColor(p) {
+  if (PURPOSE_COLORS[p]) return PURPOSE_COLORS[p];
+  if (!sparePurposeColor.has(p)) {
+    const i = Math.min(sparePurposeColor.size, SPARE_PURPOSE_COLORS.length - 1);
+    sparePurposeColor.set(p, SPARE_PURPOSE_COLORS[i]);
+  }
+  return sparePurposeColor.get(p);
+}
+
+// Donut of trips per purpose, inline SVG. Slice gaps use the panel color so
+// they read as separators in either theme.
+function purposeDonut(labeled, total) {
+  const R = 46, r = 28, C = 56; // outer radius, inner radius, center
+  const pt = (rad, a) => [C + rad * Math.sin(a), C - rad * Math.cos(a)];
+  const tip = (p, v) => `<title>${escapeHtml(p)}: ${v.trips} trip${v.trips === 1 ? "" : "s"}</title>`;
+  let slices;
+  if (labeled.length === 1) {
+    // A 360-degree arc is degenerate in SVG paths; draw the ring directly.
+    const [p, v] = labeled[0];
+    slices = `<circle cx="${C}" cy="${C}" r="${(R + r) / 2}" fill="none" ` +
+      `stroke="${purposeColor(p)}" stroke-width="${R - r}">${tip(p, v)}</circle>`;
+  } else {
+    let a0 = 0;
+    slices = labeled.map(([p, v]) => {
+      const a1 = a0 + (2 * Math.PI * v.trips) / total;
+      const large = a1 - a0 > Math.PI ? 1 : 0;
+      const [x0, y0] = pt(R, a0), [x1, y1] = pt(R, a1);
+      const [x2, y2] = pt(r, a1), [x3, y3] = pt(r, a0);
+      const d = `M${x0.toFixed(2)},${y0.toFixed(2)} A${R},${R} 0 ${large} 1 ${x1.toFixed(2)},${y1.toFixed(2)} ` +
+        `L${x2.toFixed(2)},${y2.toFixed(2)} A${r},${r} 0 ${large} 0 ${x3.toFixed(2)},${y3.toFixed(2)} Z`;
+      a0 = a1;
+      return `<path d="${d}" fill="${purposeColor(p)}" style="stroke:var(--bg-panel)" stroke-width="1.5">${tip(p, v)}</path>`;
+    }).join("");
+  }
+  return `<svg class="donut" viewBox="0 0 ${2 * C} ${2 * C}" xmlns="http://www.w3.org/2000/svg">${slices}` +
+    `<text x="${C}" y="${C - 2}" text-anchor="middle" font-size="15" font-weight="600" style="fill:var(--text-strong)">${total}</text>` +
+    `<text x="${C}" y="${C + 12}" text-anchor="middle" font-size="9" style="fill:var(--text-muted)">trips</text></svg>`;
 }
 
 function renderTopSegments(segCounts, stations) {

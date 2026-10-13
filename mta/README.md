@@ -39,8 +39,9 @@ issues so typos are visible. Rows left blank are "Unlabeled": they have their ow
 left out of the purpose breakdown, whose shares are of labeled trips only.
 
 Purpose drives the checkboxes under Filters (which narrow the map and every
-stat, alongside the date range) and the trips-and-distance breakdown under
-Totals. A Google Sheets dropdown on the column (Data › Data validation)
+stat, alongside the date range) and the donut chart and trips-and-distance
+breakdown under Totals. Each purpose has a fixed color (`PURPOSE_COLORS` in
+`app.js`). A Google Sheets dropdown on the column (Data › Data validation)
 keeps entries consistent.
 
 ### Line names by system
