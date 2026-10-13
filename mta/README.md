@@ -20,7 +20,7 @@ One row per leg. If a journey involves a transfer, log each leg separately.
 | Line | yes | See below |
 | Car number | no | Purely numeric; classified by rolling stock class |
 | Via station | no | Pins which service pattern you rode (see below) |
-| Purpose | no | Free text (e.g. Commute, Personal); counted under Totals |
+| Purpose | no | Commute, Errand, Social, Leisure, or Travel (case-insensitive); see below |
 
 The first four columns are positional. The optional ones are found by their
 header name: any header containing "car", starting with "via", or
@@ -28,6 +28,19 @@ containing "purpose", in any order. Other extra columns are ignored, so you
 can keep notes in the sheet. Without a header row, extra columns fall back
 to being classified by content (numeric is a car number, anything else a
 via station), and purpose isn't available.
+
+### Purpose
+
+Tag each leg with the purpose of the whole journey (both legs of an N-to-7
+transfer on the way to work are Commute). The five known categories are in
+`KNOWN_PURPOSES` in `heatmap-core.js`. Capitalization doesn't matter. Any
+other label still counts, as its own category, and gets a note in Data
+issues so typos are visible. Rows left blank show as "Unlabeled".
+
+Purpose drives the checkboxes under Filters (which narrow the map and every
+stat, alongside the date range) and the trips-and-distance breakdown under
+Totals. A Google Sheets dropdown on the column (Data › Data validation)
+keeps entries consistent.
 
 ### Line names by system
 

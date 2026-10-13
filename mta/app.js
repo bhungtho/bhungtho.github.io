@@ -1,6 +1,7 @@
 // Map and UI wiring; trip logic lives in heatmap-core.js.
 import {
   buildResolver, buildRouteResolver, parseTrips, processTrips, aggregate, segKey,
+  canonicalizePurposes, KNOWN_PURPOSES,
 } from "./heatmap-core.js";
 
 const SYSTEM_NAMES = {
@@ -213,11 +214,21 @@ async function main() {
     Object.entries(segments).map(([k, coords]) => [k, lineKm(coords)]));
 
   const { trips, errors: parseErrors } = parseTrips(tripsText);
+  canonicalizePurposes(trips);
+  const unknownPurposes = new Map();
+  for (const t of trips) {
+    if (t.purpose && !KNOWN_PURPOSES.includes(t.purpose)) {
+      unknownPurposes.set(t.purpose, (unknownPurposes.get(t.purpose) || 0) + 1);
+    }
+  }
+  const purposeWarnings = [...unknownPurposes.entries()].map(([p, n]) =>
+    `Purpose "${p}" (${n} trip${n === 1 ? "" : "s"}) isn't one of ` +
+    `${KNOWN_PURPOSES.join(", ")}; it's counted as its own category.`);
   const resolve = buildResolver(stations, variants, overrides);
   const resolveRoute = buildRouteResolver(routes);
   const { expanded, errors: tripErrors } = processTrips(trips, resolve, variants, resolveRoute);
 
-  renderErrors(parseErrors, tripErrors);
+  renderErrors(parseErrors, tripErrors, purposeWarnings);
   renderCoverage(expanded, segments, stations);
   renderHoodCoverage(expanded, stations);
   setupRawTable(trips, expanded, tripErrors);
@@ -470,13 +481,18 @@ async function main() {
       let distKm = 0;
       for (const [key, v] of segCounts) distKm += (segLen.get(key) || 0) * v.count;
       let longestKm = 0;
+      const byPurpose = new Map(); // purpose -> {trips, km}
       for (const t of filtered) {
         let d = 0;
         for (const [a, b] of t.hops) d += segLen.get(segKey(a, b)) || 0;
         if (d > longestKm) longestKm = d;
+        const p = purposeOf(t);
+        if (!byPurpose.has(p)) byPurpose.set(p, { trips: 0, km: 0 });
+        byPurpose.get(p).trips += 1;
+        byPurpose.get(p).km += d;
       }
 
-      renderTotals(filtered, segCounts, stationStats, distKm, longestKm);
+      renderTotals(filtered, segCounts, stationStats, distKm, longestKm, byPurpose);
       renderTopSegments(segCounts, stations);
       renderTopStations(stationStats, stations);
       renderTopLines(filtered, routes);
@@ -490,10 +506,12 @@ async function main() {
       }
     };
 
+    const activePurposes = setupPurposeFilter(expanded, () => refresh());
     const refresh = (fit = true) => {
       const from = fromEl.value || "0000-00-00";
       const to = toEl.value || "9999-99-99";
-      render(expanded.filter((t) => t.date >= from && t.date <= to), fit);
+      render(expanded.filter((t) =>
+        t.date >= from && t.date <= to && activePurposes.has(purposeOf(t))), fit);
     };
 
     fromEl.addEventListener("change", () => refresh());
@@ -627,7 +645,37 @@ function renderCoverage(expanded, segments, stations) {
     .join("");
 }
 
-function renderTotals(filtered, segCounts, stationStats, distKm, longestKm) {
+const UNLABELED = "Unlabeled";
+const purposeOf = (t) => t.purpose || UNLABELED;
+
+// Purpose checkboxes, all on by default. Returns the live set of enabled
+// purposes; hidden entirely when no trip has a purpose (e.g. other sheets).
+function setupPurposeFilter(expanded, onChange) {
+  const el = document.getElementById("purpose-filter");
+  const counts = new Map();
+  for (const t of expanded) counts.set(purposeOf(t), (counts.get(purposeOf(t)) || 0) + 1);
+  const active = new Set(counts.keys());
+  const labeled = [...counts.keys()].filter((p) => p !== UNLABELED);
+  if (!labeled.length) { el.hidden = true; return active; }
+  const order = [
+    ...KNOWN_PURPOSES.filter((p) => counts.has(p)),
+    ...labeled.filter((p) => !KNOWN_PURPOSES.includes(p))
+      .sort((a, b) => counts.get(b) - counts.get(a)),
+    ...(counts.has(UNLABELED) ? [UNLABELED] : []),
+  ];
+  el.innerHTML = `<div class="filter-label">Purpose</div>` + order.map((p) =>
+    `<label class="check"><input type="checkbox" value="${escapeHtml(p)}" checked /> ` +
+    `${escapeHtml(p)} <span class="dim">${counts.get(p)}</span></label>`).join("");
+  el.addEventListener("change", (e) => {
+    if (e.target.type !== "checkbox") return;
+    if (e.target.checked) active.add(e.target.value);
+    else active.delete(e.target.value);
+    onChange();
+  });
+  return active;
+}
+
+function renderTotals(filtered, segCounts, stationStats, distKm, longestKm, byPurpose) {
   const rows = [
     ["Trips", filtered.length],
     ["Segments ridden", segCounts.size],
@@ -635,13 +683,14 @@ function renderTotals(filtered, segCounts, stationStats, distKm, longestKm) {
     ["Distance ridden", `${distKm.toFixed(1)} km`],
     ["Longest trip", `${longestKm.toFixed(1)} km`],
   ];
-  const purposes = new Map();
-  for (const t of filtered) {
-    if (t.purpose) purposes.set(t.purpose, (purposes.get(t.purpose) || 0) + 1);
-  }
-  const purposeRows = [...purposes.entries()]
-    .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
-    .map(([p, n]) => [escapeHtml(p), `${n} (${((100 * n) / filtered.length).toFixed(0)}%)`]);
+  const anyLabeled = [...byPurpose.keys()].some((p) => p !== UNLABELED);
+  const purposeRows = anyLabeled
+    ? [...byPurpose.entries()]
+      .sort((a, b) => (a[0] === UNLABELED) - (b[0] === UNLABELED) ||
+        b[1].trips - a[1].trips || a[0].localeCompare(b[0]))
+      .map(([p, v]) => [escapeHtml(p),
+        `${v.trips} (${((100 * v.trips) / filtered.length).toFixed(0)}%) \u00b7 ${v.km.toFixed(1)} km`])
+    : [];
   const row = ([k, v]) =>
     `<div class="stat-row"><span>${k}</span><span class="value">${v}</span></div>`;
   document.getElementById("totals").innerHTML = rows.map(row).join("") +
@@ -896,16 +945,19 @@ function escapeHtml(s) {
     (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 }
 
-function renderErrors(parseErrors, tripErrors) {
+function renderErrors(parseErrors, tripErrors, warnings = []) {
   const el = document.getElementById("errors");
   const items = [
     ...parseErrors.map((e) => `Line ${e.lineNumber}: ${e.error}`),
     ...tripErrors.map((e) =>
       `${e.trip.date} ${e.trip.start} \u2192 ${e.trip.end} (${e.trip.route}): ${e.error}`),
   ];
-  el.innerHTML = items.length
-    ? items.map((m) => `<div class="err">${escapeHtml(m)}</div>`).join("")
-    : `<div class="ok">All trips resolved.</div>`;
+  // Warnings don't drop trips, so they don't replace the all-resolved note.
+  el.innerHTML =
+    (items.length
+      ? items.map((m) => `<div class="err">${escapeHtml(m)}</div>`).join("")
+      : `<div class="ok">All trips resolved.</div>`) +
+    warnings.map((m) => `<div class="warn">${escapeHtml(m)}</div>`).join("");
 }
 
 main().catch((err) => {

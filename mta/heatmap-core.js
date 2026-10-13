@@ -207,6 +207,19 @@ export function aggregate(expanded) {
   return { segCounts, stationStats };
 }
 
+// Purpose labels are merged case-insensitively. Known categories keep this
+// spelling and order; any other label keeps the first spelling seen.
+export const KNOWN_PURPOSES = ["Commute", "Errand", "Social", "Leisure", "Travel"];
+export function canonicalizePurposes(trips) {
+  const canon = new Map(KNOWN_PURPOSES.map((p) => [p.toLowerCase(), p]));
+  for (const t of trips) {
+    if (!t.purpose) continue;
+    const k = t.purpose.toLowerCase();
+    if (!canon.has(k)) canon.set(k, t.purpose);
+    t.purpose = canon.get(k);
+  }
+}
+
 // Header names -> optional trip fields, for columns after the first four.
 function headerColumns(fields) {
   const cols = {};
