@@ -635,9 +635,19 @@ function renderTotals(filtered, segCounts, stationStats, distKm, longestKm) {
     ["Distance ridden", `${distKm.toFixed(1)} km`],
     ["Longest trip", `${longestKm.toFixed(1)} km`],
   ];
-  document.getElementById("totals").innerHTML = rows
-    .map(([k, v]) => `<div class="stat-row"><span>${k}</span><span class="value">${v}</span></div>`)
-    .join("");
+  const purposes = new Map();
+  for (const t of filtered) {
+    if (t.purpose) purposes.set(t.purpose, (purposes.get(t.purpose) || 0) + 1);
+  }
+  const purposeRows = [...purposes.entries()]
+    .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
+    .map(([p, n]) => [escapeHtml(p), `${n} (${((100 * n) / filtered.length).toFixed(0)}%)`]);
+  const row = ([k, v]) =>
+    `<div class="stat-row"><span>${k}</span><span class="value">${v}</span></div>`;
+  document.getElementById("totals").innerHTML = rows.map(row).join("") +
+    (purposeRows.length
+      ? `<div class="sub-head">Trips by purpose</div>` + purposeRows.map(row).join("")
+      : "");
 }
 
 function renderTopSegments(segCounts, stations) {
@@ -860,15 +870,16 @@ function setupRawTable(trips, expanded, tripErrors) {
       : `<span class="ok">${queue.shift().path.length} stops</span>`;
     let html = `<tr><td>${esc(t.date)}</td><td>${esc(t.start)}</td><td>${esc(t.end)}</td>` +
       `<td>${esc(t.route)}</td><td>${esc(t.via ?? "")}</td>` +
-      `<td class="num">${esc(t.car ?? "")}</td><td>${status}</td></tr>`;
+      `<td class="num">${esc(t.car ?? "")}</td><td>${esc(t.purpose ?? "")}</td>` +
+      `<td>${status}</td></tr>`;
     // Error reasons get their own row: visible on touch, where title
     // tooltips never show.
-    if (err) html += `<tr class="err-detail"><td colspan="7">${esc(err)}</td></tr>`;
+    if (err) html += `<tr class="err-detail"><td colspan="8">${esc(err)}</td></tr>`;
     return html;
   });
   document.getElementById("raw-table").innerHTML =
     "<thead><tr><th>Date</th><th>Start</th><th>End</th><th>Line</th>" +
-    "<th>Via</th><th>Car</th><th>Status</th></tr></thead>" +
+    "<th>Via</th><th>Car</th><th>Purpose</th><th>Status</th></tr></thead>" +
     `<tbody>${rows.join("")}</tbody>`;
 
   const modal = document.getElementById("raw-modal");

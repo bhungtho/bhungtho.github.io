@@ -63,11 +63,18 @@ export function buildRouteResolver(routes) {
 // disambiguate by which the route serves; overrides pin anything left, keyed
 // by normalized name or "name|routeKey".
 export function buildResolver(stations, variants, overrides = {}) {
+  // Word-order-insensitive key, used only when an exact match fails:
+  // "59th Street-Lexington Avenue" vs the feed's "Lexington Av/59 St".
+  const tokenKey = (norm) => norm.split(" ").sort().join(" ");
   const byName = new Map();
+  const byTokens = new Map();
   for (const [id, s] of Object.entries(stations)) {
     const key = normalizeName(s.name);
     if (!byName.has(key)) byName.set(key, []);
     byName.get(key).push(id);
+    const tk = tokenKey(key);
+    if (!byTokens.has(tk)) byTokens.set(tk, []);
+    byTokens.get(tk).push(id);
   }
   const routeStations = new Map();
   for (const [route, seqs] of Object.entries(variants)) {
@@ -85,7 +92,7 @@ export function buildResolver(stations, variants, overrides = {}) {
       }
       return { id: pinned };
     }
-    let candidates = byName.get(norm) || [];
+    let candidates = byName.get(norm) || byTokens.get(tokenKey(norm)) || [];
     if (candidates.length === 0) {
       return { error: `no station matches "${userName}" (normalized: "${norm}")` };
     }
@@ -171,7 +178,8 @@ export function processTrips(trips, resolve, variants, resolveRoute) {
     if (ex.error) { errors.push({ trip, error: ex.error }); continue; }
     expanded.push({
       date: trip.date, route: r.label, routeKey: r.key, sys: r.sys,
-      startId: s.id, endId: e.id, car: trip.car ?? null, ...ex,
+      startId: s.id, endId: e.id, car: trip.car ?? null,
+      purpose: trip.purpose ?? null, ...ex,
     });
   }
   return { expanded, errors };
@@ -199,14 +207,30 @@ export function aggregate(expanded) {
   return { segCounts, stationStats };
 }
 
-// Rows: date, start, end, line[, via][, car number]. Tab- or comma-separated;
-// header row and blank lines are skipped; dates are M/D/YYYY or ISO. The
-// optional trailing fields are classified by content (car numbers are purely
-// numeric, station names never are), so they work in either order.
+// Header names -> optional trip fields, for columns after the first four.
+function headerColumns(fields) {
+  const cols = {};
+  fields.forEach((h, i) => {
+    if (i < 4) return;
+    const name = h.toLowerCase();
+    if (/\bcar\b/.test(name)) cols.car = i;
+    else if (/^via\b/.test(name)) cols.via = i;
+    else if (/\bpurpose\b/.test(name)) cols.purpose = i;
+  });
+  return Object.keys(cols).length ? cols : null;
+}
+
+// Rows: date, start, end, line, then optional columns. Tab- or
+// comma-separated; blank lines are skipped; dates are M/D/YYYY or ISO.
+// With a header row naming the optional columns (Car Number, Via, Purpose),
+// columns are read by name and unrecognized ones are ignored. Without one,
+// extras are classified by content: purely numeric is a car number,
+// anything else a via station.
 export function parseTrips(text) {
   const trips = [];
   const errors = [];
   const lines = text.split(/\r?\n/);
+  let cols = null;
   for (let n = 0; n < lines.length; n++) {
     const line = lines[n].trim();
     if (!line) continue;
@@ -219,18 +243,26 @@ export function parseTrips(text) {
     const [date, start, end, route, ...extras] = fields;
     const iso = toIsoDate(date);
     if (!iso) {
-      if (n === 0) continue;
+      if (n === 0) { cols = headerColumns(fields); continue; }
       errors.push({ lineNumber: n + 1, error: `unparseable date "${date}"` });
       continue;
     }
     let via = null;
     let car = null;
-    for (const extra of extras) {
-      if (!extra) continue;
-      if (/^\d{2,6}$/.test(extra)) car = car ?? extra;
-      else via = via ?? extra;
+    let purpose = null;
+    if (cols) {
+      const at = (i) => (i === undefined ? null : fields[i] || null);
+      via = at(cols.via);
+      car = at(cols.car);
+      purpose = at(cols.purpose);
+    } else {
+      for (const extra of extras) {
+        if (!extra) continue;
+        if (/^\d{2,6}$/.test(extra)) car = car ?? extra;
+        else via = via ?? extra;
+      }
     }
-    trips.push({ date: iso, start, end, route, via, car });
+    trips.push({ date: iso, start, end, route, via, car, purpose });
   }
   return { trips, errors };
 }

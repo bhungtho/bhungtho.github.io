@@ -18,12 +18,16 @@ One row per leg. If a journey involves a transfer, log each leg separately.
 | Start station | yes | Natural spelling is fine ("34th Street-Herald Square") |
 | End station | yes | |
 | Line | yes | See below |
-| Via station | no | Pins which service pattern you rode (see below) |
 | Car number | no | Purely numeric; classified by rolling stock class |
+| Via station | no | Pins which service pattern you rode (see below) |
+| Purpose | no | Free text (e.g. Commute, Personal); counted under Totals |
 
-The via and car-number columns are told apart by content, so they can be in
-either order and either can be omitted. A header row is skipped
-automatically.
+The first four columns are positional. The optional ones are found by their
+header name: any header containing "car", starting with "via", or
+containing "purpose", in any order. Other extra columns are ignored, so you
+can keep notes in the sheet. Without a header row, extra columns fall back
+to being classified by content (numeric is a car number, anything else a
+via station), and purpose isn't available.
 
 ### Line names by system
 
