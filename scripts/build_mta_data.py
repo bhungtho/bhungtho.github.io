@@ -9,6 +9,7 @@ joined by "|", with coordinates running from the lower id to the higher.
 Usage: python3 build_data.py
 """
 
+import collections
 import csv
 import io
 import json
@@ -327,6 +328,225 @@ def process_feed(key, zf):
     return stations, routes, variants, segments
 
 
+# MTA buses: one feed per borough plus MTA Bus Co. Unlike the rail feeds,
+# buses are written as one small file per route (web/data/bus/), and the
+# page fetches only the routes that appear in the trip sheet.
+BUS_FEEDS = ["bx", "b", "m", "q", "si", "busco"]
+BUS_URL = "https://rrgtfsfeeds.s3.amazonaws.com/gtfs_{}.zip"
+
+# Mirrors normalizeName's tokenMap in web/heatmap-core.js. Keep them in sync:
+# bus stops are merged into intersections by these tokens, and the page
+# matches typed names with the JS version.
+TOKEN_MAP = {
+    "street": "st", "streets": "st", "avenue": "av", "ave": "av", "avs": "av",
+    "avenues": "av", "boulevard": "blvd", "bl": "blvd", "square": "sq",
+    "park": "pk", "parkway": "pkwy", "place": "pl", "plaza": "plaza",
+    "road": "rd", "drive": "dr", "court": "ct", "terrace": "ter",
+    "terr": "ter", "lane": "ln", "heights": "hts", "center": "ctr",
+    "junction": "jct", "fort": "ft", "saint": "st", "highway": "hwy",
+    "expressway": "expwy", "expy": "expwy", "turnpike": "tpke",
+    "university": "univ", "island": "is", "beach": "bch", "gardens": "gdns",
+    "north": "n", "south": "s", "east": "e", "west": "w",
+}
+NOT_A_STOP = re.compile(r"not a stop|not used|non-public", re.I)
+
+
+def stop_tokens(name):
+    s = re.sub(r"\(.*?\)", " ", name.lower())
+    s = re.sub(r"[-/().,'\u00b7&@\u2013\u2014]", " ", s)
+    s = re.sub(r"\b(\d+)(st|nd|rd|th)\b", r"\1", s)
+    return [TOKEN_MAP.get(t, t) for t in s.split()]
+
+
+def clean_stop_name(name):
+    """Display form: drop notes like "(FAR)", title-case the all-caps names."""
+    s = re.sub(r"\s*\(.*?\)", "", name).strip()
+    s = re.sub(r"\s*/\s*", "/", re.sub(r"\s+", " ", s))
+    s = s.title() if s.isupper() else s
+    return re.sub(r"'S\b", "'s", s)
+
+
+def project_forward(pts, cum, p, start):
+    """Like project_onto, but only at or after shape index `start`, so stops
+    project in route order and can't snap to an earlier pass of a looping
+    shape. Stops scanning once the shape has moved ~1 km past a good match."""
+    best_d2, best_along, best_i = float("inf"), 0.0, start
+    px, py = p
+    for i in range(start, len(pts) - 1):
+        ax, ay = pts[i]
+        bx, by = pts[i + 1]
+        vx, vy = bx - ax, by - ay
+        seg_len2 = vx * vx + vy * vy
+        t = 0.0 if seg_len2 == 0 else max(0.0, min(1.0, ((px - ax) * vx + (py - ay) * vy) / seg_len2))
+        cx, cy = ax + t * vx, ay + t * vy
+        d2 = (px - cx) ** 2 + (py - cy) ** 2
+        if d2 < best_d2:
+            best_d2, best_along, best_i = d2, cum[i] + t * math.sqrt(seg_len2), i
+        elif best_d2 < 0.003 ** 2 and d2 > (math.sqrt(best_d2) + 0.01) ** 2:
+            break
+    return best_along, math.sqrt(best_d2), best_i
+
+
+def process_bus():
+    """Returns (nodes, routes, variants, segments) for all MTA bus routes.
+
+    Each stop pole is its own GTFS stop, one per corner and direction. Poles
+    whose names have the same words (either word order) within 300 m merge
+    into one intersection node, so "W 34 St/8 Av" names one place whichever
+    corner or direction you used; trip direction comes from stop order.
+    """
+    stop_info = {}           # raw stop id -> (name, lat, lon)
+    routes = {}
+    patterns = {}            # route key -> {tuple(raw stop ids): shape_id}
+    shape_pts = {}
+    for b in BUS_FEEDS:
+        path = feed_zip_path(f"bus_{b}", BUS_URL.format(b))
+        zf = zipfile.ZipFile(path)
+        for r in read_csv(zf, "stops.txt"):
+            if not NOT_A_STOP.search(r["stop_name"]):
+                stop_info.setdefault(r["stop_id"], (r["stop_name"], float(r["stop_lat"]), float(r["stop_lon"])))
+        for r in read_csv(zf, "routes.txt"):
+            rid = r["route_id"]
+            short = (r.get("route_short_name") or rid).strip()
+            color = (r.get("route_color") or "").strip()
+            text_color = (r.get("route_text_color") or "").strip()
+            routes.setdefault(f"bus:{rid}", {
+                "sys": "bus", "label": short,
+                "aliases": sorted({normalize_route(short), normalize_route(rid)}),
+                "color": f"#{color}" if color else None,
+                "textColor": f"#{text_color}" if text_color else None,
+            })
+        trip_meta = {r["trip_id"]: (f"bus:{r['route_id']}", r.get("shape_id") or None)
+                     for r in read_csv(zf, "trips.txt")}
+
+        # Bus stop_times are grouped by trip, so stream one trip at a time
+        # rather than holding the whole timetable in memory.
+        def finish(trip_id, rows):
+            if trip_id not in trip_meta:
+                return
+            route, shp = trip_meta[trip_id]
+            seq = tuple(s for _, s, no_service in sorted(rows)
+                        if not no_service and s in stop_info)
+            if len(seq) >= 2:
+                patterns.setdefault(route, {}).setdefault(seq, shp)
+        cur, rows = None, []
+        for r in read_csv(zf, "stop_times.txt"):
+            if r["trip_id"] != cur:
+                if cur is not None:
+                    finish(cur, rows)
+                cur, rows = r["trip_id"], []
+            no_service = r.get("pickup_type") == "1" and r.get("drop_off_type") == "1"
+            rows.append((int(r["stop_sequence"]), r["stop_id"], no_service))
+        if cur is not None:
+            finish(cur, rows)
+
+        for r in read_csv(zf, "shapes.txt"):
+            shape_pts.setdefault(r["shape_id"], []).append(
+                (int(r["shape_pt_sequence"]), float(r["shape_pt_lat"]), float(r["shape_pt_lon"])))
+    for shp, pts in shape_pts.items():
+        pts.sort()
+        shape_pts[shp] = [(lat, lon) for _, lat, lon in pts]
+
+    # SBS routes ("M60+", "M60-SBS") also answer to the bare number when no
+    # local route has it ("M60"), but never shadow a real local ("M15").
+    taken = {a for r in routes.values() for a in r["aliases"]}
+    for r in routes.values():
+        base = re.sub(r"[\s+]*sbs$|\+$", "", r["aliases"][0]).strip()
+        if r["label"].upper().endswith("-SBS") and base not in taken:
+            r["aliases"] = sorted(set(r["aliases"]) | {base})
+            taken.add(base)
+    routes = {k: v for k, v in routes.items() if k in patterns}
+
+    # --- merge poles into intersection nodes ---
+    used = {s for pats in patterns.values() for seq in pats for s in seq}
+    by_key = {}
+    for sid in sorted(used):
+        name, lat, lon = stop_info[sid]
+        by_key.setdefault(tuple(sorted(stop_tokens(name))), []).append(sid)
+    node_of, nodes = {}, {}
+    for members in by_key.values():
+        clusters = []  # [anchor (lat, lon), [stop ids]]
+        for sid in members:
+            _, lat, lon = stop_info[sid]
+            for c in clusters:
+                if math.hypot((lat - c[0][0]) * 111.32, (lon - c[0][1]) * 111.32 * COS_LAT) < 0.3:
+                    c[1].append(sid)
+                    break
+            else:
+                clusters.append([(lat, lon), [sid]])
+        for _, sids in clusters:
+            nid = f"bus:{sids[0]}"
+            names = collections.Counter(clean_stop_name(stop_info[s][0]) for s in sids)
+            nodes[nid] = {
+                "name": sorted(names.items(), key=lambda kv: (-kv[1], kv[0]))[0][0],
+                "lat": round(sum(stop_info[s][1] for s in sids) / len(sids), 6),
+                "lon": round(sum(stop_info[s][2] for s in sids) / len(sids), 6),
+                "sys": "bus",
+            }
+            for s in sids:
+                node_of[s] = nid
+
+    # --- variants and segments over nodes ---
+    variants, segments, fallback = {}, {}, set()
+    for route, pats in patterns.items():
+        seen = set()
+        for raw_seq, shp in pats.items():
+            seq = []
+            for s in raw_seq:
+                n = node_of[s]
+                if not seq or seq[-1] != n:
+                    seq.append(n)
+            tup = tuple(seq)
+            if len(seq) < 2 or tup in seen:
+                continue
+            seen.add(tup)
+            variants.setdefault(route, []).append(seq)
+            pairs = [(a, b) for a, b in zip(seq, seq[1:])
+                     if "|".join(sorted((a, b))) not in segments]
+            raw_pts = shape_pts.get(shp)
+            if not pairs:
+                continue
+            if not raw_pts or len(raw_pts) < 2:
+                fallback.update(pairs)
+                continue
+            pts = [scaled(lat, lon) for lat, lon in raw_pts]
+            cum = polyline_cumlen(pts)
+            along, start = {}, 0
+            for n in seq:
+                a_, off, start = project_forward(pts, cum, scaled(nodes[n]["lat"], nodes[n]["lon"]), start)
+                along[n] = (a_, off)
+            for a, b in pairs:
+                key = "|".join(sorted((a, b)))
+                (da, off_a), (db, off_b) = along[a], along[b]
+                if key in segments:
+                    continue
+                if off_a > 0.005 or off_b > 0.005 or db - da < 1e-9:
+                    fallback.add((a, b))
+                    continue
+                coords = slice_polyline(raw_pts, cum, da, db)
+                # A slice far longer than the stop spacing took a wrong loop
+                # of the shape; a straight line is closer to the truth.
+                straight = math.hypot(
+                    (nodes[a]["lon"] - nodes[b]["lon"]) * COS_LAT, nodes[a]["lat"] - nodes[b]["lat"])
+                if len(coords) < 2 or (straight > 0.0005 and db - da > 3 * straight):
+                    fallback.add((a, b))
+                    continue
+                if a > b:
+                    coords.reverse()
+                segments[key] = coords
+    n_fallback = 0
+    for a, b in fallback:
+        key = "|".join(sorted((a, b)))
+        if key not in segments:
+            lo, hi = sorted((a, b))
+            segments[key] = [[nodes[lo]["lon"], nodes[lo]["lat"]], [nodes[hi]["lon"], nodes[hi]["lat"]]]
+            n_fallback += 1
+    n_var = sum(len(v) for v in variants.values())
+    print(f"[bus] {len(used)} stops -> {len(nodes)} intersections, {len(routes)} routes, "
+          f"{n_var} variants, {len(segments)} segments, {n_fallback} straight-line fallbacks")
+    return nodes, routes, variants, segments
+
+
 def _station(sys_key, row):
     return {
         "name": row["stop_name"],
@@ -441,11 +661,15 @@ def main():
         all_variants.update(variants)
         all_segments.update(segments)
 
-    assign_neighborhoods(all_stations)
+    bus_nodes, bus_routes, bus_variants, bus_segments = process_bus()
+
+    # Same station dicts, so assignment writes through to both collections.
+    assign_neighborhoods({**all_stations, **bus_nodes})
 
     # Fill polygons for the map's neighborhood overlay: shoreline-clipped
-    # tracts tagged with their NTA, limited to station-served neighborhoods.
-    used_hoods = {s["hood"] for s in all_stations.values() if s["hood"]}
+    # tracts tagged with their NTA, limited to neighborhoods with a station
+    # or bus stop. This set is also the neighborhood-coverage denominator.
+    used_hoods = {s["hood"] for s in {**all_stations, **bus_nodes}.values() if s["hood"]}
     feats = json.load(open(os.path.join(CACHE_DIR, "tracts.geojson")))["features"]
     hood_feats = []
     for f in feats:
@@ -519,7 +743,7 @@ def main():
 
     # An alias mapping to multiple routes makes sheet rows ambiguous.
     alias_owners = {}
-    for rk, r in all_routes.items():
+    for rk, r in {**all_routes, **bus_routes}.items():
         for a in r["aliases"]:
             alias_owners.setdefault(a, []).append(rk)
     collisions = {a: ks for a, ks in alias_owners.items() if len(ks) > 1}
@@ -536,6 +760,7 @@ def main():
         ("segments.json", all_segments, False),
         ("hoods.json", hoods_fc, False),
         ("hood_borders.json", borders_fc, False),
+        ("served_hoods.json", sorted(used_hoods), True),
     ]:
         path = os.path.join(OUT_DIR, name)
         with open(path, "w") as f:
@@ -545,6 +770,38 @@ def main():
             else:
                 json.dump(data, f, separators=(",", ":"))
         print(f"wrote {path} ({os.path.getsize(path) // 1024} KB)")
+
+    write_bus_files(bus_nodes, bus_routes, bus_variants, bus_segments)
+
+
+def write_bus_files(nodes, routes, variants, segments):
+    """One file per route plus an index; stale route files are removed."""
+    bus_dir = os.path.join(OUT_DIR, "bus")
+    os.makedirs(bus_dir, exist_ok=True)
+    for old in os.listdir(bus_dir):
+        if old.endswith(".json"):
+            os.remove(os.path.join(bus_dir, old))
+    index, total = {}, 0
+    for rk, r in sorted(routes.items()):
+        rid = rk.split(":", 1)[1]
+        fname = re.sub(r"[^A-Za-z0-9]", lambda m: "_plus" if m.group() == "+" else "_", rid) + ".json"
+        seqs = variants[rk]
+        ids = {n for seq in seqs for n in seq}
+        keys = {"|".join(sorted(p)) for seq in seqs for p in zip(seq, seq[1:])}
+        data = {
+            "stations": {n: nodes[n] for n in sorted(ids)},
+            "variants": seqs,
+            "segments": {k: segments[k] for k in sorted(keys)},
+        }
+        path = os.path.join(bus_dir, fname)
+        with open(path, "w") as f:
+            json.dump(data, f, separators=(",", ":"))
+        total += os.path.getsize(path)
+        index[rk] = {**r, "file": fname}
+    with open(os.path.join(bus_dir, "index.json"), "w") as f:
+        json.dump(index, f, indent=2, sort_keys=True)
+        f.write("\n")
+    print(f"wrote {len(index)} bus route files ({total // 1024} KB total) + index")
 
 
 if __name__ == "__main__":

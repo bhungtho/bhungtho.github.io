@@ -1,12 +1,12 @@
 // Map and UI wiring; trip logic lives in heatmap-core.js.
 import {
   buildResolver, buildRouteResolver, parseTrips, processTrips, aggregate, segKey,
-  canonicalizePurposes, KNOWN_PURPOSES,
+  canonicalizePurposes, KNOWN_PURPOSES, mergeBusRoute, busRoutesFor,
 } from "./heatmap-core.js";
 
 const SYSTEM_NAMES = {
   sub: "Subway", lirr: "LIRR", mnr: "Metro-North", njt: "NJ Transit",
-  path: "PATH", fer: "NYC Ferry",
+  path: "PATH", fer: "NYC Ferry", bus: "Bus",
 };
 
 // Default trip source: the site owner's published Google Sheet CSV.
@@ -197,11 +197,14 @@ toggleEl.addEventListener("click", () =>
 if (window.matchMedia("(max-width: 640px)").matches) setPanelHidden(true);
 
 async function main() {
-  const [stations, routes, variants, segments, carClasses, overrides, tripsText] = await Promise.all([
+  const [stations, routes, variants, segments, busIndex, servedHoods, carClasses, overrides,
+    tripsText] = await Promise.all([
     fetchJson("data/stations.json"),
     fetchJson("data/routes.json"),
     fetchJson("data/variants.json"),
     fetchJson("data/segments.json"),
+    fetchJson("data/bus/index.json").catch(() => ({})),
+    fetchJson("data/served_hoods.json").catch(() => null),
     fetchJson("car_classes.json").catch(() => ({})),
     fetchJson("name_overrides.json").catch(() => ({})),
     fetch(TRIPS_URL).then((r) => {
@@ -210,10 +213,21 @@ async function main() {
     }),
   ]);
 
+  const { trips, errors: parseErrors } = parseTrips(tripsText);
+
+  // Bus routes are known up front (small index) but their stops and
+  // geometry are fetched only for routes that appear in the sheet.
+  Object.assign(routes, busIndex);
+  const resolveRoute = buildRouteResolver(routes);
+  const busFiles = await Promise.all(busRoutesFor(trips, resolveRoute).map((k) =>
+    fetchJson(`data/bus/${busIndex[k].file}`).then((d) => [k, d]).catch(() => null)));
+  for (const entry of busFiles) {
+    if (entry) mergeBusRoute({ stations, variants, segments }, entry[0], entry[1]);
+  }
+
   const segLen = new Map(
     Object.entries(segments).map(([k, coords]) => [k, lineKm(coords)]));
 
-  const { trips, errors: parseErrors } = parseTrips(tripsText);
   canonicalizePurposes(trips);
   const unknownPurposes = new Map();
   for (const t of trips) {
@@ -225,12 +239,11 @@ async function main() {
     `Purpose "${p}" (${n} trip${n === 1 ? "" : "s"}) isn't one of ` +
     `${KNOWN_PURPOSES.join(", ")}; it's counted as its own category.`);
   const resolve = buildResolver(stations, variants, overrides);
-  const resolveRoute = buildRouteResolver(routes);
   const { expanded, errors: tripErrors } = processTrips(trips, resolve, variants, resolveRoute);
 
   renderErrors(parseErrors, tripErrors, purposeWarnings);
   renderCoverage(expanded, segments, stations);
-  renderHoodCoverage(expanded, stations);
+  renderHoodCoverage(expanded, stations, servedHoods);
   setupRawTable(trips, expanded, tripErrors);
 
   const dates = expanded.map((t) => t.date).sort();
@@ -257,7 +270,8 @@ async function main() {
       type: "geojson",
       data: {
         type: "FeatureCollection",
-        features: Object.values(segments).map((coords) => ({
+        // Buses are left out: 300 routes would bury the rail network.
+        features: Object.entries(segments).filter(([k]) => !k.startsWith("bus:")).map(([, coords]) => ({
           type: "Feature",
           geometry: { type: "LineString", coordinates: coords },
           properties: {},
@@ -528,7 +542,7 @@ function emptyFc() {
 
 // Camera framing stays on the city: fit to subway/PATH/ferry segments and let
 // commuter rail run off-screen. Falls back to everything if none are ridden.
-const CITY_SYSTEMS = new Set(["sub", "path", "fer"]);
+const CITY_SYSTEMS = new Set(["sub", "path", "fer", "bus"]);
 function focusBounds(segKeys, segments) {
   const city = segKeys.filter((k) => CITY_SYSTEMS.has(k.split(":")[0]));
   const bounds = new maplibregl.LngLatBounds();
@@ -616,10 +630,13 @@ function renderCoverage(expanded, segments, stations) {
     if (!totals.has(sys)) totals.set(sys, { segTotal: 0, stTotal: 0, segDone: 0, stDone: 0 });
     return totals.get(sys);
   };
-  for (const key of Object.keys(segments)) entry(sysOf(key)).segTotal += 1;
-  for (const id of Object.keys(stations)) entry(sysOf(id)).stTotal += 1;
-  for (const key of segCounts.keys()) entry(sysOf(key)).segDone += 1;
-  for (const id of stationStats.keys()) entry(sysOf(id)).stDone += 1;
+  // Buses have no coverage bar: only ridden routes are loaded, so there is
+  // no meaningful denominator.
+  const counted = (k) => sysOf(k) !== "bus";
+  for (const key of Object.keys(segments).filter(counted)) entry(sysOf(key)).segTotal += 1;
+  for (const id of Object.keys(stations).filter(counted)) entry(sysOf(id)).stTotal += 1;
+  for (const key of [...segCounts.keys()].filter(counted)) entry(sysOf(key)).segDone += 1;
+  for (const id of [...stationStats.keys()].filter(counted)) entry(sysOf(id)).stDone += 1;
 
   const order = ["sub", "lirr", "mnr", "njt", "path", "fer"];
   const systems = [...totals.keys()].sort(
@@ -878,25 +895,28 @@ function carClassOf(carClasses, sys, car) {
 }
 
 function renderCars(filtered, carClasses) {
-  const cars = new Map(); // car -> {count, routes: Set}
+  // Keyed by system too: bus 5490 and subway car 5490 are different vehicles.
+  const cars = new Map(); // "sys:number" -> {car, sys, count, routes: Set}
   const classes = new Map(); // class -> {rides, cars: Set}
   let logged = 0;
   for (const t of filtered) {
     if (!t.car) continue;
     logged += 1;
-    if (!cars.has(t.car)) cars.set(t.car, { count: 0, routes: new Set() });
-    const c = cars.get(t.car);
+    const id = `${t.sys}:${t.car}`;
+    if (!cars.has(id)) cars.set(id, { car: t.car, sys: t.sys, count: 0, routes: new Set() });
+    const c = cars.get(id);
     c.count += 1;
     c.routes.add(t.route);
-    const cls = carClassOf(carClasses, t.sys, t.car) || "unknown";
+    const cls = carClassOf(carClasses, t.sys, t.car) ||
+      `${SYSTEM_NAMES[t.sys] ?? t.sys} (unclassified)`;
     if (!classes.has(cls)) classes.set(cls, { rides: 0, cars: new Set() });
     classes.get(cls).rides += 1;
-    classes.get(cls).cars.add(t.car);
+    classes.get(cls).cars.add(id);
   }
   const rows = [
     ["Rides with car logged", logged],
     ["Unique cars", cars.size],
-    ["Classes ridden", [...classes.keys()].filter((c) => c !== "unknown").length],
+    ["Classes ridden", [...classes.keys()].filter((c) => !c.endsWith("(unclassified)")).length],
   ];
   document.getElementById("car-stats").innerHTML = rows
     .map(([k, v]) => `<div class="stat-row"><span>${k}</span><span class="value">${v}</span></div>`)
@@ -916,8 +936,9 @@ function renderCars(filtered, carClasses) {
     .sort((a, b) => b[1].count - a[1].count || a[0].localeCompare(b[0]))
     .slice(0, 8);
   const repeatRows = repeats.length
-    ? repeats.map(([car, c]) =>
-        `<div><span class="count">${c.count}\u00d7</span> car ${car} <span class="dim">(${[...c.routes].sort().join(", ")})</span></div>`)
+    ? repeats.map(([, c]) =>
+        `<div><span class="count">${c.count}\u00d7</span> ${c.sys === "bus" ? "bus" : "car"} ${escapeHtml(c.car)} ` +
+        `<span class="dim">(${[...c.routes].sort().join(", ")})</span></div>`)
       .join("")
     : `<div class="dim">None yet \u2014 same physical car caught twice.</div>`;
   document.getElementById("top-cars").innerHTML = logged
@@ -927,13 +948,16 @@ function renderCars(filtered, carClasses) {
 
 // A neighborhood counts as visited when you boarded or exited there;
 // riding through underneath doesn't count. All-time, like system coverage.
-function renderHoodCoverage(expanded, stations) {
+// The denominator is every neighborhood with a station or bus stop
+// (served_hoods.json), fixed at build time so it doesn't depend on which bus
+// routes happen to be loaded.
+function renderHoodCoverage(expanded, stations, servedHoods) {
   const { stationStats } = aggregate(expanded);
   const visited = new Set();
   for (const [id, s] of stationStats.entries()) {
     if (s.board + s.alight > 0 && stations[id].hood) visited.add(stations[id].hood);
   }
-  const total = new Set(
+  const total = servedHoods ? servedHoods.length : new Set(
     Object.values(stations).map((s) => s.hood).filter(Boolean)).size;
   const pct = total ? (100 * visited.size) / total : 0;
   document.getElementById("hood-coverage").innerHTML = `

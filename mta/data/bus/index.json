@@ -1,0 +1,3489 @@
+{
+  "bus:B1": {
+    "aliases": [
+      "b1"
+    ],
+    "color": "#00AEEF",
+    "file": "B1.json",
+    "label": "B1",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:B100": {
+    "aliases": [
+      "b100"
+    ],
+    "color": "#B933AD",
+    "file": "B100.json",
+    "label": "B100",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:B103": {
+    "aliases": [
+      "b103"
+    ],
+    "color": "#FAA61A",
+    "file": "B103.json",
+    "label": "B103",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:B11": {
+    "aliases": [
+      "b11"
+    ],
+    "color": "#006CB7",
+    "file": "B11.json",
+    "label": "B11",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:B12": {
+    "aliases": [
+      "b12"
+    ],
+    "color": "#6CBE45",
+    "file": "B12.json",
+    "label": "B12",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:B13": {
+    "aliases": [
+      "b13"
+    ],
+    "color": "#FAA61A",
+    "file": "B13.json",
+    "label": "B13",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:B14": {
+    "aliases": [
+      "b14"
+    ],
+    "color": "#00AEEF",
+    "file": "B14.json",
+    "label": "B14",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:B15": {
+    "aliases": [
+      "b15"
+    ],
+    "color": "#B933AD",
+    "file": "B15.json",
+    "label": "B15",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:B16": {
+    "aliases": [
+      "b16"
+    ],
+    "color": "#FAA61A",
+    "file": "B16.json",
+    "label": "B16",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:B17": {
+    "aliases": [
+      "b17"
+    ],
+    "color": "#B933AD",
+    "file": "B17.json",
+    "label": "B17",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:B2": {
+    "aliases": [
+      "b2"
+    ],
+    "color": "#006CB7",
+    "file": "B2.json",
+    "label": "B2",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:B20": {
+    "aliases": [
+      "b20"
+    ],
+    "color": "#6CBE45",
+    "file": "B20.json",
+    "label": "B20",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:B24": {
+    "aliases": [
+      "b24"
+    ],
+    "color": "#FAA61A",
+    "file": "B24.json",
+    "label": "B24",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:B25": {
+    "aliases": [
+      "b25"
+    ],
+    "color": "#6CBE45",
+    "file": "B25.json",
+    "label": "B25",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:B26": {
+    "aliases": [
+      "b26"
+    ],
+    "color": "#006CB7",
+    "file": "B26.json",
+    "label": "B26",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:B3": {
+    "aliases": [
+      "b3"
+    ],
+    "color": "#EE352E",
+    "file": "B3.json",
+    "label": "B3",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:B31": {
+    "aliases": [
+      "b31"
+    ],
+    "color": "#FAA61A",
+    "file": "B31.json",
+    "label": "B31",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:B32": {
+    "aliases": [
+      "b32"
+    ],
+    "color": "#006CB7",
+    "file": "B32.json",
+    "label": "B32",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:B35": {
+    "aliases": [
+      "b35"
+    ],
+    "color": "#EE352E",
+    "file": "B35.json",
+    "label": "B35",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:B36": {
+    "aliases": [
+      "b36"
+    ],
+    "color": "#FAA61A",
+    "file": "B36.json",
+    "label": "B36",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:B37": {
+    "aliases": [
+      "b37"
+    ],
+    "color": "#B933AD",
+    "file": "B37.json",
+    "label": "B37",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:B38": {
+    "aliases": [
+      "b38"
+    ],
+    "color": "#00AEEF",
+    "file": "B38.json",
+    "label": "B38",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:B39": {
+    "aliases": [
+      "b39"
+    ],
+    "color": "#00AEEF",
+    "file": "B39.json",
+    "label": "B39",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:B4": {
+    "aliases": [
+      "b4"
+    ],
+    "color": "#6CBE45",
+    "file": "B4.json",
+    "label": "B4",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:B41": {
+    "aliases": [
+      "b41"
+    ],
+    "color": "#006CB7",
+    "file": "B41.json",
+    "label": "B41",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:B42": {
+    "aliases": [
+      "b42"
+    ],
+    "color": "#006CB7",
+    "file": "B42.json",
+    "label": "B42",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:B43": {
+    "aliases": [
+      "b43"
+    ],
+    "color": "#EE352E",
+    "file": "B43.json",
+    "label": "B43",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:B44": {
+    "aliases": [
+      "b44"
+    ],
+    "color": "#B933AD",
+    "file": "B44.json",
+    "label": "B44",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:B44+": {
+    "aliases": [
+      "b44 sbs",
+      "b44+"
+    ],
+    "color": "#B933AD",
+    "file": "B44_plus.json",
+    "label": "B44-SBS",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:B45": {
+    "aliases": [
+      "b45"
+    ],
+    "color": "#EE352E",
+    "file": "B45.json",
+    "label": "B45",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:B46": {
+    "aliases": [
+      "b46"
+    ],
+    "color": "#6CBE45",
+    "file": "B46.json",
+    "label": "B46",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:B46+": {
+    "aliases": [
+      "b46 sbs",
+      "b46+"
+    ],
+    "color": "#6CBE45",
+    "file": "B46_plus.json",
+    "label": "B46-SBS",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:B47": {
+    "aliases": [
+      "b47"
+    ],
+    "color": "#FAA61A",
+    "file": "B47.json",
+    "label": "B47",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:B48": {
+    "aliases": [
+      "b48"
+    ],
+    "color": "#6CBE45",
+    "file": "B48.json",
+    "label": "B48",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:B49": {
+    "aliases": [
+      "b49"
+    ],
+    "color": "#EE352E",
+    "file": "B49.json",
+    "label": "B49",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:B52": {
+    "aliases": [
+      "b52"
+    ],
+    "color": "#EE352E",
+    "file": "B52.json",
+    "label": "B52",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:B54": {
+    "aliases": [
+      "b54"
+    ],
+    "color": "#6CBE45",
+    "file": "B54.json",
+    "label": "B54",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:B57": {
+    "aliases": [
+      "b57"
+    ],
+    "color": "#EE352E",
+    "file": "B57.json",
+    "label": "B57",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:B6": {
+    "aliases": [
+      "b6"
+    ],
+    "color": "#EE352E",
+    "file": "B6.json",
+    "label": "B6",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:B60": {
+    "aliases": [
+      "b60"
+    ],
+    "color": "#B933AD",
+    "file": "B60.json",
+    "label": "B60",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:B61": {
+    "aliases": [
+      "b61"
+    ],
+    "color": "#6CBE45",
+    "file": "B61.json",
+    "label": "B61",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:B62": {
+    "aliases": [
+      "b62"
+    ],
+    "color": "#00AEEF",
+    "file": "B62.json",
+    "label": "B62",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:B63": {
+    "aliases": [
+      "b63"
+    ],
+    "color": "#006CB7",
+    "file": "B63.json",
+    "label": "B63",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:B64": {
+    "aliases": [
+      "b64"
+    ],
+    "color": "#6CBE45",
+    "file": "B64.json",
+    "label": "B64",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:B65": {
+    "aliases": [
+      "b65"
+    ],
+    "color": "#00AEEF",
+    "file": "B65.json",
+    "label": "B65",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:B67": {
+    "aliases": [
+      "b67"
+    ],
+    "color": "#EE352E",
+    "file": "B67.json",
+    "label": "B67",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:B68": {
+    "aliases": [
+      "b68"
+    ],
+    "color": "#EE352E",
+    "file": "B68.json",
+    "label": "B68",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:B69": {
+    "aliases": [
+      "b69"
+    ],
+    "color": "#006CB7",
+    "file": "B69.json",
+    "label": "B69",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:B7": {
+    "aliases": [
+      "b7"
+    ],
+    "color": "#EE352E",
+    "file": "B7.json",
+    "label": "B7",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:B70": {
+    "aliases": [
+      "b70"
+    ],
+    "color": "#B933AD",
+    "file": "B70.json",
+    "label": "B70",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:B74": {
+    "aliases": [
+      "b74"
+    ],
+    "color": "#EE352E",
+    "file": "B74.json",
+    "label": "B74",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:B8": {
+    "aliases": [
+      "b8"
+    ],
+    "color": "#FAA61A",
+    "file": "B8.json",
+    "label": "B8",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:B82": {
+    "aliases": [
+      "b82"
+    ],
+    "color": "#6CBE45",
+    "file": "B82.json",
+    "label": "B82",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:B82+": {
+    "aliases": [
+      "b82 sbs",
+      "b82+"
+    ],
+    "color": "#6CBE45",
+    "file": "B82_plus.json",
+    "label": "B82-SBS",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:B83": {
+    "aliases": [
+      "b83"
+    ],
+    "color": "#EE352E",
+    "file": "B83.json",
+    "label": "B83",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:B84": {
+    "aliases": [
+      "b84"
+    ],
+    "color": "#006CB7",
+    "file": "B84.json",
+    "label": "B84",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:B9": {
+    "aliases": [
+      "b9"
+    ],
+    "color": "#EE352E",
+    "file": "B9.json",
+    "label": "B9",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:BM1": {
+    "aliases": [
+      "bm1"
+    ],
+    "color": "#00933C",
+    "file": "BM1.json",
+    "label": "BM1",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:BM2": {
+    "aliases": [
+      "bm2"
+    ],
+    "color": "#00933C",
+    "file": "BM2.json",
+    "label": "BM2",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:BM3": {
+    "aliases": [
+      "bm3"
+    ],
+    "color": "#00933C",
+    "file": "BM3.json",
+    "label": "BM3",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:BM4": {
+    "aliases": [
+      "bm4"
+    ],
+    "color": "#00933C",
+    "file": "BM4.json",
+    "label": "BM4",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:BM5": {
+    "aliases": [
+      "bm5"
+    ],
+    "color": "#00933C",
+    "file": "BM5.json",
+    "label": "BM5",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:BX1": {
+    "aliases": [
+      "bx1"
+    ],
+    "color": "#00AEEF",
+    "file": "BX1.json",
+    "label": "Bx1",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:BX10": {
+    "aliases": [
+      "bx10"
+    ],
+    "color": "#006CB7",
+    "file": "BX10.json",
+    "label": "Bx10",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:BX11": {
+    "aliases": [
+      "bx11"
+    ],
+    "color": "#FAA61A",
+    "file": "BX11.json",
+    "label": "Bx11",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:BX12": {
+    "aliases": [
+      "bx12"
+    ],
+    "color": "#006CB7",
+    "file": "BX12.json",
+    "label": "Bx12",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:BX12+": {
+    "aliases": [
+      "bx12 sbs",
+      "bx12+"
+    ],
+    "color": "#006CB7",
+    "file": "BX12_plus.json",
+    "label": "Bx12-SBS",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:BX13": {
+    "aliases": [
+      "bx13"
+    ],
+    "color": "#006CB7",
+    "file": "BX13.json",
+    "label": "Bx13",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:BX15": {
+    "aliases": [
+      "bx15"
+    ],
+    "color": "#FAA61A",
+    "file": "BX15.json",
+    "label": "Bx15",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:BX16": {
+    "aliases": [
+      "bx16"
+    ],
+    "color": "#00AEEF",
+    "file": "BX16.json",
+    "label": "Bx16",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:BX17": {
+    "aliases": [
+      "bx17"
+    ],
+    "color": "#006CB7",
+    "file": "BX17.json",
+    "label": "Bx17",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:BX18A": {
+    "aliases": [
+      "bx18a"
+    ],
+    "color": "#6CBE45",
+    "file": "BX18A.json",
+    "label": "Bx18A",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:BX18B": {
+    "aliases": [
+      "bx18b"
+    ],
+    "color": "#6CBE45",
+    "file": "BX18B.json",
+    "label": "Bx18B",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:BX19": {
+    "aliases": [
+      "bx19"
+    ],
+    "color": "#B933AD",
+    "file": "BX19.json",
+    "label": "Bx19",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:BX2": {
+    "aliases": [
+      "bx2"
+    ],
+    "color": "#FAA61A",
+    "file": "BX2.json",
+    "label": "Bx2",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:BX20": {
+    "aliases": [
+      "bx20"
+    ],
+    "color": "#00AEEF",
+    "file": "BX20.json",
+    "label": "Bx20",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:BX21": {
+    "aliases": [
+      "bx21"
+    ],
+    "color": "#6CBE45",
+    "file": "BX21.json",
+    "label": "Bx21",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:BX22": {
+    "aliases": [
+      "bx22"
+    ],
+    "color": "#EE352E",
+    "file": "BX22.json",
+    "label": "Bx22",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:BX23": {
+    "aliases": [
+      "bx23"
+    ],
+    "color": "#B933AD",
+    "file": "BX23.json",
+    "label": "Bx23",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:BX24": {
+    "aliases": [
+      "bx24"
+    ],
+    "color": "#6CBE45",
+    "file": "BX24.json",
+    "label": "Bx24",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:BX25": {
+    "aliases": [
+      "bx25"
+    ],
+    "color": "#FAA61A",
+    "file": "BX25.json",
+    "label": "Bx25",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:BX26": {
+    "aliases": [
+      "bx26"
+    ],
+    "color": "#FAA61A",
+    "file": "BX26.json",
+    "label": "Bx26",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:BX27": {
+    "aliases": [
+      "bx27"
+    ],
+    "color": "#00AEEF",
+    "file": "BX27.json",
+    "label": "Bx27",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:BX28": {
+    "aliases": [
+      "bx28"
+    ],
+    "color": "#00AEEF",
+    "file": "BX28.json",
+    "label": "Bx28",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:BX29": {
+    "aliases": [
+      "bx29"
+    ],
+    "color": "#00AEEF",
+    "file": "BX29.json",
+    "label": "Bx29",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:BX3": {
+    "aliases": [
+      "bx3"
+    ],
+    "color": "#EE352E",
+    "file": "BX3.json",
+    "label": "Bx3",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:BX30": {
+    "aliases": [
+      "bx30"
+    ],
+    "color": "#EE352E",
+    "file": "BX30.json",
+    "label": "Bx30",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:BX31": {
+    "aliases": [
+      "bx31"
+    ],
+    "color": "#EE352E",
+    "file": "BX31.json",
+    "label": "Bx31",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:BX32": {
+    "aliases": [
+      "bx32"
+    ],
+    "color": "#6CBE45",
+    "file": "BX32.json",
+    "label": "Bx32",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:BX33": {
+    "aliases": [
+      "bx33"
+    ],
+    "color": "#6CBE45",
+    "file": "BX33.json",
+    "label": "Bx33",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:BX34": {
+    "aliases": [
+      "bx34"
+    ],
+    "color": "#B933AD",
+    "file": "BX34.json",
+    "label": "Bx34",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:BX35": {
+    "aliases": [
+      "bx35"
+    ],
+    "color": "#00AEEF",
+    "file": "BX35.json",
+    "label": "Bx35",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:BX36": {
+    "aliases": [
+      "bx36"
+    ],
+    "color": "#B933AD",
+    "file": "BX36.json",
+    "label": "Bx36",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:BX38": {
+    "aliases": [
+      "bx38"
+    ],
+    "color": "#FAA61A",
+    "file": "BX38.json",
+    "label": "Bx38",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:BX39": {
+    "aliases": [
+      "bx39"
+    ],
+    "color": "#FAA61A",
+    "file": "BX39.json",
+    "label": "Bx39",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:BX4": {
+    "aliases": [
+      "bx4"
+    ],
+    "color": "#FAA61A",
+    "file": "BX4.json",
+    "label": "Bx4",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:BX40": {
+    "aliases": [
+      "bx40"
+    ],
+    "color": "#006CB7",
+    "file": "BX40.json",
+    "label": "Bx40",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:BX41": {
+    "aliases": [
+      "bx41"
+    ],
+    "color": "#EE352E",
+    "file": "BX41.json",
+    "label": "Bx41",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:BX41+": {
+    "aliases": [
+      "bx41 sbs",
+      "bx41+"
+    ],
+    "color": "#EE352E",
+    "file": "BX41_plus.json",
+    "label": "Bx41-SBS",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:BX42": {
+    "aliases": [
+      "bx42"
+    ],
+    "color": "#EE352E",
+    "file": "BX42.json",
+    "label": "Bx42",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:BX46": {
+    "aliases": [
+      "bx46"
+    ],
+    "color": "#EE352E",
+    "file": "BX46.json",
+    "label": "Bx46",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:BX4A": {
+    "aliases": [
+      "bx4a"
+    ],
+    "color": "#FAA61A",
+    "file": "BX4A.json",
+    "label": "Bx4A",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:BX5": {
+    "aliases": [
+      "bx5"
+    ],
+    "color": "#EE352E",
+    "file": "BX5.json",
+    "label": "Bx5",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:BX6": {
+    "aliases": [
+      "bx6"
+    ],
+    "color": "#EE352E",
+    "file": "BX6.json",
+    "label": "Bx6",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:BX6+": {
+    "aliases": [
+      "bx6 sbs",
+      "bx6+"
+    ],
+    "color": "#EE352E",
+    "file": "BX6_plus.json",
+    "label": "Bx6-SBS",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:BX7": {
+    "aliases": [
+      "bx7"
+    ],
+    "color": "#EE352E",
+    "file": "BX7.json",
+    "label": "Bx7",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:BX8": {
+    "aliases": [
+      "bx8"
+    ],
+    "color": "#FAA61A",
+    "file": "BX8.json",
+    "label": "Bx8",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:BX9": {
+    "aliases": [
+      "bx9"
+    ],
+    "color": "#FAA61A",
+    "file": "BX9.json",
+    "label": "Bx9",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:BXM1": {
+    "aliases": [
+      "bxm1"
+    ],
+    "color": "#00933C",
+    "file": "BXM1.json",
+    "label": "BxM1",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:BXM10": {
+    "aliases": [
+      "bxm10"
+    ],
+    "color": "#00933C",
+    "file": "BXM10.json",
+    "label": "BxM10",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:BXM11": {
+    "aliases": [
+      "bxm11"
+    ],
+    "color": "#00933C",
+    "file": "BXM11.json",
+    "label": "BxM11",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:BXM18": {
+    "aliases": [
+      "bxm18"
+    ],
+    "color": "#00933C",
+    "file": "BXM18.json",
+    "label": "BxM18",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:BXM2": {
+    "aliases": [
+      "bxm2"
+    ],
+    "color": "#00933C",
+    "file": "BXM2.json",
+    "label": "BxM2",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:BXM3": {
+    "aliases": [
+      "bxm3"
+    ],
+    "color": "#00933C",
+    "file": "BXM3.json",
+    "label": "BxM3",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:BXM4": {
+    "aliases": [
+      "bxm4"
+    ],
+    "color": "#00933C",
+    "file": "BXM4.json",
+    "label": "BxM4",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:BXM6": {
+    "aliases": [
+      "bxm6"
+    ],
+    "color": "#00933C",
+    "file": "BXM6.json",
+    "label": "BxM6",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:BXM7": {
+    "aliases": [
+      "bxm7"
+    ],
+    "color": "#00933C",
+    "file": "BXM7.json",
+    "label": "BxM7",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:BXM8": {
+    "aliases": [
+      "bxm8"
+    ],
+    "color": "#00933C",
+    "file": "BXM8.json",
+    "label": "BxM8",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:BXM9": {
+    "aliases": [
+      "bxm9"
+    ],
+    "color": "#00933C",
+    "file": "BXM9.json",
+    "label": "BxM9",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:M1": {
+    "aliases": [
+      "m1"
+    ],
+    "color": "#EE352E",
+    "file": "M1.json",
+    "label": "M1",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:M10": {
+    "aliases": [
+      "m10"
+    ],
+    "color": "#006CB7",
+    "file": "M10.json",
+    "label": "M10",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:M100": {
+    "aliases": [
+      "m100"
+    ],
+    "color": "#00AEEF",
+    "file": "M100.json",
+    "label": "M100",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:M101": {
+    "aliases": [
+      "m101"
+    ],
+    "color": "#FAA61A",
+    "file": "M101.json",
+    "label": "M101",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:M102": {
+    "aliases": [
+      "m102"
+    ],
+    "color": "#FAA61A",
+    "file": "M102.json",
+    "label": "M102",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:M103": {
+    "aliases": [
+      "m103"
+    ],
+    "color": "#B933AD",
+    "file": "M103.json",
+    "label": "M103",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:M104": {
+    "aliases": [
+      "m104"
+    ],
+    "color": "#B933AD",
+    "file": "M104.json",
+    "label": "M104",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:M106": {
+    "aliases": [
+      "m106"
+    ],
+    "color": "#6CBE45",
+    "file": "M106.json",
+    "label": "M106",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:M11": {
+    "aliases": [
+      "m11"
+    ],
+    "color": "#FAA61A",
+    "file": "M11.json",
+    "label": "M11",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:M116": {
+    "aliases": [
+      "m116"
+    ],
+    "color": "#6CBE45",
+    "file": "M116.json",
+    "label": "M116",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:M12": {
+    "aliases": [
+      "m12"
+    ],
+    "color": "#006CB7",
+    "file": "M12.json",
+    "label": "M12",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:M125": {
+    "aliases": [
+      "m125"
+    ],
+    "color": "#B933AD",
+    "file": "M125.json",
+    "label": "M125",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:M14A+": {
+    "aliases": [
+      "m14a",
+      "m14a sbs",
+      "m14a+"
+    ],
+    "color": "#6CBE45",
+    "file": "M14A_plus.json",
+    "label": "M14A-SBS",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:M14D+": {
+    "aliases": [
+      "m14d",
+      "m14d sbs",
+      "m14d+"
+    ],
+    "color": "#6CBE45",
+    "file": "M14D_plus.json",
+    "label": "M14D-SBS",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:M15": {
+    "aliases": [
+      "m15"
+    ],
+    "color": "#006CB7",
+    "file": "M15.json",
+    "label": "M15",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:M15+": {
+    "aliases": [
+      "m15 sbs",
+      "m15+"
+    ],
+    "color": "#006CB7",
+    "file": "M15_plus.json",
+    "label": "M15-SBS",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:M2": {
+    "aliases": [
+      "m2"
+    ],
+    "color": "#B933AD",
+    "file": "M2.json",
+    "label": "M2",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:M20": {
+    "aliases": [
+      "m20"
+    ],
+    "color": "#EE352E",
+    "file": "M20.json",
+    "label": "M20",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:M21": {
+    "aliases": [
+      "m21"
+    ],
+    "color": "#FAA61A",
+    "file": "M21.json",
+    "label": "M21",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:M22": {
+    "aliases": [
+      "m22"
+    ],
+    "color": "#00AEEF",
+    "file": "M22.json",
+    "label": "M22",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:M23+": {
+    "aliases": [
+      "m23",
+      "m23 sbs",
+      "m23+"
+    ],
+    "color": "#B933AD",
+    "file": "M23_plus.json",
+    "label": "M23-SBS",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:M3": {
+    "aliases": [
+      "m3"
+    ],
+    "color": "#B933AD",
+    "file": "M3.json",
+    "label": "M3",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:M31": {
+    "aliases": [
+      "m31"
+    ],
+    "color": "#B933AD",
+    "file": "M31.json",
+    "label": "M31",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:M34+": {
+    "aliases": [
+      "m34",
+      "m34 sbs",
+      "m34+"
+    ],
+    "color": "#006CB7",
+    "file": "M34_plus.json",
+    "label": "M34-SBS",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:M34A+": {
+    "aliases": [
+      "m34a",
+      "m34a sbs",
+      "m34a+"
+    ],
+    "color": "#006CB7",
+    "file": "M34A_plus.json",
+    "label": "M34A-SBS",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:M35": {
+    "aliases": [
+      "m35"
+    ],
+    "color": "#FAA61A",
+    "file": "M35.json",
+    "label": "M35",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:M4": {
+    "aliases": [
+      "m4"
+    ],
+    "color": "#00AEEF",
+    "file": "M4.json",
+    "label": "M4",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:M42": {
+    "aliases": [
+      "m42"
+    ],
+    "color": "#EE352E",
+    "file": "M42.json",
+    "label": "M42",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:M5": {
+    "aliases": [
+      "m5"
+    ],
+    "color": "#EE352E",
+    "file": "M5.json",
+    "label": "M5",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:M50": {
+    "aliases": [
+      "m50"
+    ],
+    "color": "#6CBE45",
+    "file": "M50.json",
+    "label": "M50",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:M55": {
+    "aliases": [
+      "m55"
+    ],
+    "color": "#6CBE45",
+    "file": "M55.json",
+    "label": "M55",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:M57": {
+    "aliases": [
+      "m57"
+    ],
+    "color": "#00AEEF",
+    "file": "M57.json",
+    "label": "M57",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:M60+": {
+    "aliases": [
+      "m60",
+      "m60 sbs",
+      "m60+"
+    ],
+    "color": "#EE352E",
+    "file": "M60_plus.json",
+    "label": "M60-SBS",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:M66": {
+    "aliases": [
+      "m66"
+    ],
+    "color": "#FAA61A",
+    "file": "M66.json",
+    "label": "M66",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:M7": {
+    "aliases": [
+      "m7"
+    ],
+    "color": "#00AEEF",
+    "file": "M7.json",
+    "label": "M7",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:M72": {
+    "aliases": [
+      "m72"
+    ],
+    "color": "#6CBE45",
+    "file": "M72.json",
+    "label": "M72",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:M79+": {
+    "aliases": [
+      "m79",
+      "m79 sbs",
+      "m79+"
+    ],
+    "color": "#EE352E",
+    "file": "M79_plus.json",
+    "label": "M79-SBS",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:M8": {
+    "aliases": [
+      "m8"
+    ],
+    "color": "#00AEEF",
+    "file": "M8.json",
+    "label": "M8",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:M86+": {
+    "aliases": [
+      "m86",
+      "m86 sbs",
+      "m86+"
+    ],
+    "color": "#FAA61A",
+    "file": "M86_plus.json",
+    "label": "M86-SBS",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:M9": {
+    "aliases": [
+      "m9"
+    ],
+    "color": "#B933AD",
+    "file": "M9.json",
+    "label": "M9",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:M96": {
+    "aliases": [
+      "m96"
+    ],
+    "color": "#6CBE45",
+    "file": "M96.json",
+    "label": "M96",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:M98": {
+    "aliases": [
+      "m98"
+    ],
+    "color": "#EE352E",
+    "file": "M98.json",
+    "label": "M98",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:Q06": {
+    "aliases": [
+      "q06",
+      "q6"
+    ],
+    "color": "#EE352E",
+    "file": "Q06.json",
+    "label": "Q6",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:Q07": {
+    "aliases": [
+      "q07",
+      "q7"
+    ],
+    "color": "#FAA61A",
+    "file": "Q07.json",
+    "label": "Q7",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:Q08": {
+    "aliases": [
+      "q08",
+      "q8"
+    ],
+    "color": "#EE352E",
+    "file": "Q08.json",
+    "label": "Q8",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:Q09": {
+    "aliases": [
+      "q09",
+      "q9"
+    ],
+    "color": "#B933AD",
+    "file": "Q09.json",
+    "label": "Q9",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:Q1": {
+    "aliases": [
+      "q1"
+    ],
+    "color": "#FAA61A",
+    "file": "Q1.json",
+    "label": "Q1",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:Q10": {
+    "aliases": [
+      "q10"
+    ],
+    "color": "#FAA61A",
+    "file": "Q10.json",
+    "label": "Q10",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:Q100": {
+    "aliases": [
+      "q100"
+    ],
+    "color": "#EE352E",
+    "file": "Q100.json",
+    "label": "Q100",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:Q101": {
+    "aliases": [
+      "q101"
+    ],
+    "color": "#FAA61A",
+    "file": "Q101.json",
+    "label": "Q101",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:Q102": {
+    "aliases": [
+      "q102"
+    ],
+    "color": "#FAA61A",
+    "file": "Q102.json",
+    "label": "Q102",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:Q103": {
+    "aliases": [
+      "q103"
+    ],
+    "color": "#FAA61A",
+    "file": "Q103.json",
+    "label": "Q103",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:Q104": {
+    "aliases": [
+      "q104"
+    ],
+    "color": "#FAA61A",
+    "file": "Q104.json",
+    "label": "Q104",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:Q11": {
+    "aliases": [
+      "q11"
+    ],
+    "color": "#6CBE45",
+    "file": "Q11.json",
+    "label": "Q11",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:Q110": {
+    "aliases": [
+      "q110"
+    ],
+    "color": "#FAA61A",
+    "file": "Q110.json",
+    "label": "Q110",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:Q111": {
+    "aliases": [
+      "q111"
+    ],
+    "color": "#B933AD",
+    "file": "Q111.json",
+    "label": "Q111",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:Q112": {
+    "aliases": [
+      "q112"
+    ],
+    "color": "#EE352E",
+    "file": "Q112.json",
+    "label": "Q112",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:Q113": {
+    "aliases": [
+      "q113"
+    ],
+    "color": "#EE352E",
+    "file": "Q113.json",
+    "label": "Q113",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:Q114": {
+    "aliases": [
+      "q114"
+    ],
+    "color": "#B933AD",
+    "file": "Q114.json",
+    "label": "Q114",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:Q115": {
+    "aliases": [
+      "q115"
+    ],
+    "color": "#EE352E",
+    "file": "Q115.json",
+    "label": "Q115",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:Q12": {
+    "aliases": [
+      "q12"
+    ],
+    "color": "#EE352E",
+    "file": "Q12.json",
+    "label": "Q12",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:Q13": {
+    "aliases": [
+      "q13"
+    ],
+    "color": "#EE352E",
+    "file": "Q13.json",
+    "label": "Q13",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:Q14": {
+    "aliases": [
+      "q14"
+    ],
+    "color": "#00AEEF",
+    "file": "Q14.json",
+    "label": "Q14",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:Q15": {
+    "aliases": [
+      "q15"
+    ],
+    "color": "#FAA61A",
+    "file": "Q15.json",
+    "label": "Q15",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:Q16": {
+    "aliases": [
+      "q16"
+    ],
+    "color": "#EE352E",
+    "file": "Q16.json",
+    "label": "Q16",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:Q17": {
+    "aliases": [
+      "q17"
+    ],
+    "color": "#EE352E",
+    "file": "Q17.json",
+    "label": "Q17",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:Q18": {
+    "aliases": [
+      "q18"
+    ],
+    "color": "#FAA61A",
+    "file": "Q18.json",
+    "label": "Q18",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:Q19": {
+    "aliases": [
+      "q19"
+    ],
+    "color": "#FAA61A",
+    "file": "Q19.json",
+    "label": "Q19",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:Q2": {
+    "aliases": [
+      "q2"
+    ],
+    "color": "#6CBE45",
+    "file": "Q2.json",
+    "label": "Q2",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:Q20": {
+    "aliases": [
+      "q20"
+    ],
+    "color": "#FAA61A",
+    "file": "Q20.json",
+    "label": "Q20",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:Q22": {
+    "aliases": [
+      "q22"
+    ],
+    "color": "#EE352E",
+    "file": "Q22.json",
+    "label": "Q22",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:Q23": {
+    "aliases": [
+      "q23"
+    ],
+    "color": "#FAA61A",
+    "file": "Q23.json",
+    "label": "Q23",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:Q24": {
+    "aliases": [
+      "q24"
+    ],
+    "color": "#00AEEF",
+    "file": "Q24.json",
+    "label": "Q24",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:Q25": {
+    "aliases": [
+      "q25"
+    ],
+    "color": "#FAA61A",
+    "file": "Q25.json",
+    "label": "Q25",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:Q26": {
+    "aliases": [
+      "q26"
+    ],
+    "color": "#FAA61A",
+    "file": "Q26.json",
+    "label": "Q26",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:Q27": {
+    "aliases": [
+      "q27"
+    ],
+    "color": "#EE352E",
+    "file": "Q27.json",
+    "label": "Q27",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:Q28": {
+    "aliases": [
+      "q28"
+    ],
+    "color": "#B933AD",
+    "file": "Q28.json",
+    "label": "Q28",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:Q29": {
+    "aliases": [
+      "q29"
+    ],
+    "color": "#FAA61A",
+    "file": "Q29.json",
+    "label": "Q29",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:Q3": {
+    "aliases": [
+      "q3"
+    ],
+    "color": "#00AEEF",
+    "file": "Q3.json",
+    "label": "Q3",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:Q30": {
+    "aliases": [
+      "q30"
+    ],
+    "color": "#FAA61A",
+    "file": "Q30.json",
+    "label": "Q30",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:Q31": {
+    "aliases": [
+      "q31"
+    ],
+    "color": "#FAA61A",
+    "file": "Q31.json",
+    "label": "Q31",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:Q32": {
+    "aliases": [
+      "q32"
+    ],
+    "color": "#FAA61A",
+    "file": "Q32.json",
+    "label": "Q32",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:Q33": {
+    "aliases": [
+      "q33"
+    ],
+    "color": "#FAA61A",
+    "file": "Q33.json",
+    "label": "Q33",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:Q35": {
+    "aliases": [
+      "q35"
+    ],
+    "color": "#006CB7",
+    "file": "Q35.json",
+    "label": "Q35",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:Q36": {
+    "aliases": [
+      "q36"
+    ],
+    "color": "#FAA61A",
+    "file": "Q36.json",
+    "label": "Q36",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:Q37": {
+    "aliases": [
+      "q37"
+    ],
+    "color": "#00AEEF",
+    "file": "Q37.json",
+    "label": "Q37",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:Q38": {
+    "aliases": [
+      "q38"
+    ],
+    "color": "#FAA61A",
+    "file": "Q38.json",
+    "label": "Q38",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:Q39": {
+    "aliases": [
+      "q39"
+    ],
+    "color": "#FAA61A",
+    "file": "Q39.json",
+    "label": "Q39",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:Q4": {
+    "aliases": [
+      "q4"
+    ],
+    "color": "#EE352E",
+    "file": "Q4.json",
+    "label": "Q4",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:Q40": {
+    "aliases": [
+      "q40"
+    ],
+    "color": "#B933AD",
+    "file": "Q40.json",
+    "label": "Q40",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:Q41": {
+    "aliases": [
+      "q41"
+    ],
+    "color": "#FAA61A",
+    "file": "Q41.json",
+    "label": "Q41",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:Q42": {
+    "aliases": [
+      "q42"
+    ],
+    "color": "#00AEEF",
+    "file": "Q42.json",
+    "label": "Q42",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:Q43": {
+    "aliases": [
+      "q43"
+    ],
+    "color": "#EE352E",
+    "file": "Q43.json",
+    "label": "Q43",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:Q44+": {
+    "aliases": [
+      "q44",
+      "q44 sbs",
+      "q44+"
+    ],
+    "color": "#EE352E",
+    "file": "Q44_plus.json",
+    "label": "Q44-SBS",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:Q45": {
+    "aliases": [
+      "q45"
+    ],
+    "color": "#EE352E",
+    "file": "Q45.json",
+    "label": "Q45",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:Q46": {
+    "aliases": [
+      "q46"
+    ],
+    "color": "#EE352E",
+    "file": "Q46.json",
+    "label": "Q46",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:Q47": {
+    "aliases": [
+      "q47"
+    ],
+    "color": "#FAA61A",
+    "file": "Q47.json",
+    "label": "Q47",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:Q48": {
+    "aliases": [
+      "q48"
+    ],
+    "color": "#006CB7",
+    "file": "Q48.json",
+    "label": "Q48",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:Q49": {
+    "aliases": [
+      "q49"
+    ],
+    "color": "#FAA61A",
+    "file": "Q49.json",
+    "label": "Q49",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:Q5": {
+    "aliases": [
+      "q5"
+    ],
+    "color": "#EE352E",
+    "file": "Q5.json",
+    "label": "Q5",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:Q50": {
+    "aliases": [
+      "q50"
+    ],
+    "color": "#EE352E",
+    "file": "Q50.json",
+    "label": "Q50",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:Q51": {
+    "aliases": [
+      "q51"
+    ],
+    "color": "#EE352E",
+    "file": "Q51.json",
+    "label": "Q51",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:Q52+": {
+    "aliases": [
+      "q52",
+      "q52 sbs",
+      "q52+"
+    ],
+    "color": "#006CB7",
+    "file": "Q52_plus.json",
+    "label": "Q52-SBS",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:Q53+": {
+    "aliases": [
+      "q53",
+      "q53 sbs",
+      "q53+"
+    ],
+    "color": "#006CB7",
+    "file": "Q53_plus.json",
+    "label": "Q53-SBS",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:Q54": {
+    "aliases": [
+      "q54"
+    ],
+    "color": "#B933AD",
+    "file": "Q54.json",
+    "label": "Q54",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:Q55": {
+    "aliases": [
+      "q55"
+    ],
+    "color": "#EE352E",
+    "file": "Q55.json",
+    "label": "Q55",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:Q56": {
+    "aliases": [
+      "q56"
+    ],
+    "color": "#B933AD",
+    "file": "Q56.json",
+    "label": "Q56",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:Q58": {
+    "aliases": [
+      "q58"
+    ],
+    "color": "#6CBE45",
+    "file": "Q58.json",
+    "label": "Q58",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:Q59": {
+    "aliases": [
+      "q59"
+    ],
+    "color": "#FAA61A",
+    "file": "Q59.json",
+    "label": "Q59",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:Q60": {
+    "aliases": [
+      "q60"
+    ],
+    "color": "#FAA61A",
+    "file": "Q60.json",
+    "label": "Q60",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:Q61": {
+    "aliases": [
+      "q61"
+    ],
+    "color": "#B933AD",
+    "file": "Q61.json",
+    "label": "Q61",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:Q63": {
+    "aliases": [
+      "q63"
+    ],
+    "color": "#B933AD",
+    "file": "Q63.json",
+    "label": "Q63",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:Q64": {
+    "aliases": [
+      "q64"
+    ],
+    "color": "#FAA61A",
+    "file": "Q64.json",
+    "label": "Q64",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:Q65": {
+    "aliases": [
+      "q65"
+    ],
+    "color": "#FAA61A",
+    "file": "Q65.json",
+    "label": "Q65",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:Q66": {
+    "aliases": [
+      "q66"
+    ],
+    "color": "#FAA61A",
+    "file": "Q66.json",
+    "label": "Q66",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:Q67": {
+    "aliases": [
+      "q67"
+    ],
+    "color": "#FAA61A",
+    "file": "Q67.json",
+    "label": "Q67",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:Q69": {
+    "aliases": [
+      "q69"
+    ],
+    "color": "#FAA61A",
+    "file": "Q69.json",
+    "label": "Q69",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:Q70+": {
+    "aliases": [
+      "q70",
+      "q70 sbs",
+      "q70+"
+    ],
+    "color": "#006CB7",
+    "file": "Q70_plus.json",
+    "label": "Q70-SBS",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:Q72": {
+    "aliases": [
+      "q72"
+    ],
+    "color": "#FAA61A",
+    "file": "Q72.json",
+    "label": "Q72",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:Q74": {
+    "aliases": [
+      "q74"
+    ],
+    "color": "#EE352E",
+    "file": "Q74.json",
+    "label": "Q74",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:Q75": {
+    "aliases": [
+      "q75"
+    ],
+    "color": "#00AEEF",
+    "file": "Q75.json",
+    "label": "Q75",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:Q76": {
+    "aliases": [
+      "q76"
+    ],
+    "color": "#6CBE45",
+    "file": "Q76.json",
+    "label": "Q76",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:Q77": {
+    "aliases": [
+      "q77"
+    ],
+    "color": "#FAA61A",
+    "file": "Q77.json",
+    "label": "Q77",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:Q80": {
+    "aliases": [
+      "q80"
+    ],
+    "color": "#EE352E",
+    "file": "Q80.json",
+    "label": "Q80",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:Q82": {
+    "aliases": [
+      "q82"
+    ],
+    "color": "#FAA61A",
+    "file": "Q82.json",
+    "label": "Q82",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:Q83": {
+    "aliases": [
+      "q83"
+    ],
+    "color": "#6CBE45",
+    "file": "Q83.json",
+    "label": "Q83",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:Q84": {
+    "aliases": [
+      "q84"
+    ],
+    "color": "#B933AD",
+    "file": "Q84.json",
+    "label": "Q84",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:Q85": {
+    "aliases": [
+      "q85"
+    ],
+    "color": "#EE352E",
+    "file": "Q85.json",
+    "label": "Q85",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:Q86": {
+    "aliases": [
+      "q86"
+    ],
+    "color": "#B933AD",
+    "file": "Q86.json",
+    "label": "Q86",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:Q87": {
+    "aliases": [
+      "q87"
+    ],
+    "color": "#B933AD",
+    "file": "Q87.json",
+    "label": "Q87",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:Q88": {
+    "aliases": [
+      "q88"
+    ],
+    "color": "#FAA61A",
+    "file": "Q88.json",
+    "label": "Q88",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:Q89": {
+    "aliases": [
+      "q89"
+    ],
+    "color": "#B933AD",
+    "file": "Q89.json",
+    "label": "Q89",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:Q90": {
+    "aliases": [
+      "q90"
+    ],
+    "color": "#EE352E",
+    "file": "Q90.json",
+    "label": "Q90",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:Q98": {
+    "aliases": [
+      "q98"
+    ],
+    "color": "#6CBE45",
+    "file": "Q98.json",
+    "label": "Q98",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:QM1": {
+    "aliases": [
+      "qm1"
+    ],
+    "color": "#00933C",
+    "file": "QM1.json",
+    "label": "QM1",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:QM10": {
+    "aliases": [
+      "qm10"
+    ],
+    "color": "#00933C",
+    "file": "QM10.json",
+    "label": "QM10",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:QM11": {
+    "aliases": [
+      "qm11"
+    ],
+    "color": "#00933C",
+    "file": "QM11.json",
+    "label": "QM11",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:QM12": {
+    "aliases": [
+      "qm12"
+    ],
+    "color": "#00933C",
+    "file": "QM12.json",
+    "label": "QM12",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:QM15": {
+    "aliases": [
+      "qm15"
+    ],
+    "color": "#00933C",
+    "file": "QM15.json",
+    "label": "QM15",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:QM16": {
+    "aliases": [
+      "qm16"
+    ],
+    "color": "#00933C",
+    "file": "QM16.json",
+    "label": "QM16",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:QM17": {
+    "aliases": [
+      "qm17"
+    ],
+    "color": "#00933C",
+    "file": "QM17.json",
+    "label": "QM17",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:QM18": {
+    "aliases": [
+      "qm18"
+    ],
+    "color": "#00933C",
+    "file": "QM18.json",
+    "label": "QM18",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:QM2": {
+    "aliases": [
+      "qm2"
+    ],
+    "color": "#00933C",
+    "file": "QM2.json",
+    "label": "QM2",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:QM20": {
+    "aliases": [
+      "qm20"
+    ],
+    "color": "#00933C",
+    "file": "QM20.json",
+    "label": "QM20",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:QM21": {
+    "aliases": [
+      "qm21"
+    ],
+    "color": "#00933C",
+    "file": "QM21.json",
+    "label": "QM21",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:QM24": {
+    "aliases": [
+      "qm24"
+    ],
+    "color": "#00933C",
+    "file": "QM24.json",
+    "label": "QM24",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:QM25": {
+    "aliases": [
+      "qm25"
+    ],
+    "color": "#00933C",
+    "file": "QM25.json",
+    "label": "QM25",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:QM31": {
+    "aliases": [
+      "qm31"
+    ],
+    "color": "#00933C",
+    "file": "QM31.json",
+    "label": "QM31",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:QM32": {
+    "aliases": [
+      "qm32"
+    ],
+    "color": "#00933C",
+    "file": "QM32.json",
+    "label": "QM32",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:QM34": {
+    "aliases": [
+      "qm34"
+    ],
+    "color": "#00933C",
+    "file": "QM34.json",
+    "label": "QM34",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:QM35": {
+    "aliases": [
+      "qm35"
+    ],
+    "color": "#00933C",
+    "file": "QM35.json",
+    "label": "QM35",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:QM36": {
+    "aliases": [
+      "qm36"
+    ],
+    "color": "#00933C",
+    "file": "QM36.json",
+    "label": "QM36",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:QM4": {
+    "aliases": [
+      "qm4"
+    ],
+    "color": "#00933C",
+    "file": "QM4.json",
+    "label": "QM4",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:QM40": {
+    "aliases": [
+      "qm40"
+    ],
+    "color": "#00933C",
+    "file": "QM40.json",
+    "label": "QM40",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:QM42": {
+    "aliases": [
+      "qm42"
+    ],
+    "color": "#00933C",
+    "file": "QM42.json",
+    "label": "QM42",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:QM44": {
+    "aliases": [
+      "qm44"
+    ],
+    "color": "#00933C",
+    "file": "QM44.json",
+    "label": "QM44",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:QM5": {
+    "aliases": [
+      "qm5"
+    ],
+    "color": "#00933C",
+    "file": "QM5.json",
+    "label": "QM5",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:QM6": {
+    "aliases": [
+      "qm6"
+    ],
+    "color": "#00933C",
+    "file": "QM6.json",
+    "label": "QM6",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:QM63": {
+    "aliases": [
+      "qm63"
+    ],
+    "color": "#00933C",
+    "file": "QM63.json",
+    "label": "QM63",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:QM64": {
+    "aliases": [
+      "qm64"
+    ],
+    "color": "#00933C",
+    "file": "QM64.json",
+    "label": "QM64",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:QM65": {
+    "aliases": [
+      "qm65"
+    ],
+    "color": "#00933C",
+    "file": "QM65.json",
+    "label": "QM65",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:QM68": {
+    "aliases": [
+      "qm68"
+    ],
+    "color": "#00933C",
+    "file": "QM68.json",
+    "label": "QM68",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:QM7": {
+    "aliases": [
+      "qm7"
+    ],
+    "color": "#00933C",
+    "file": "QM7.json",
+    "label": "QM7",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:QM8": {
+    "aliases": [
+      "qm8"
+    ],
+    "color": "#00933C",
+    "file": "QM8.json",
+    "label": "QM8",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:S40": {
+    "aliases": [
+      "s40"
+    ],
+    "color": "#B933AD",
+    "file": "S40.json",
+    "label": "S40",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:S42": {
+    "aliases": [
+      "s42"
+    ],
+    "color": "#00AEEF",
+    "file": "S42.json",
+    "label": "S42",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:S44": {
+    "aliases": [
+      "s44"
+    ],
+    "color": "#FAA61A",
+    "file": "S44.json",
+    "label": "S44",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:S46": {
+    "aliases": [
+      "s46"
+    ],
+    "color": "#006CB7",
+    "file": "S46.json",
+    "label": "S46",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:S48": {
+    "aliases": [
+      "s48"
+    ],
+    "color": "#EE352E",
+    "file": "S48.json",
+    "label": "S48",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:S51": {
+    "aliases": [
+      "s51"
+    ],
+    "color": "#006CB7",
+    "file": "S51.json",
+    "label": "S51",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:S52": {
+    "aliases": [
+      "s52"
+    ],
+    "color": "#B933AD",
+    "file": "S52.json",
+    "label": "S52",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:S53": {
+    "aliases": [
+      "s53"
+    ],
+    "color": "#EE352E",
+    "file": "S53.json",
+    "label": "S53",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:S54": {
+    "aliases": [
+      "s54"
+    ],
+    "color": "#FAA61A",
+    "file": "S54.json",
+    "label": "S54",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:S55": {
+    "aliases": [
+      "s55"
+    ],
+    "color": "#FAA61A",
+    "file": "S55.json",
+    "label": "S55",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:S56": {
+    "aliases": [
+      "s56"
+    ],
+    "color": "#6CBE45",
+    "file": "S56.json",
+    "label": "S56",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:S57": {
+    "aliases": [
+      "s57"
+    ],
+    "color": "#6CBE45",
+    "file": "S57.json",
+    "label": "S57",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:S59": {
+    "aliases": [
+      "s59"
+    ],
+    "color": "#EE352E",
+    "file": "S59.json",
+    "label": "S59",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:S61": {
+    "aliases": [
+      "s61"
+    ],
+    "color": "#EE352E",
+    "file": "S61.json",
+    "label": "S61",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:S62": {
+    "aliases": [
+      "s62"
+    ],
+    "color": "#B933AD",
+    "file": "S62.json",
+    "label": "S62",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:S66": {
+    "aliases": [
+      "s66"
+    ],
+    "color": "#6CBE45",
+    "file": "S66.json",
+    "label": "S66",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:S74": {
+    "aliases": [
+      "s74"
+    ],
+    "color": "#EE352E",
+    "file": "S74.json",
+    "label": "S74",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:S76": {
+    "aliases": [
+      "s76"
+    ],
+    "color": "#B933AD",
+    "file": "S76.json",
+    "label": "S76",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:S78": {
+    "aliases": [
+      "s78"
+    ],
+    "color": "#FAA61A",
+    "file": "S78.json",
+    "label": "S78",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:S79+": {
+    "aliases": [
+      "s79",
+      "s79 sbs",
+      "s79+"
+    ],
+    "color": "#006CB7",
+    "file": "S79_plus.json",
+    "label": "S79-SBS",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:S81": {
+    "aliases": [
+      "s81"
+    ],
+    "color": "#006CB7",
+    "file": "S81.json",
+    "label": "S81",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:S84": {
+    "aliases": [
+      "s84"
+    ],
+    "color": "#EE352E",
+    "file": "S84.json",
+    "label": "S84",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:S86": {
+    "aliases": [
+      "s86"
+    ],
+    "color": "#B933AD",
+    "file": "S86.json",
+    "label": "S86",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:S89": {
+    "aliases": [
+      "s89"
+    ],
+    "color": "#EE352E",
+    "file": "S89.json",
+    "label": "S89",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:S90": {
+    "aliases": [
+      "s90"
+    ],
+    "color": "#B933AD",
+    "file": "S90.json",
+    "label": "S90",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:S91": {
+    "aliases": [
+      "s91"
+    ],
+    "color": "#EE352E",
+    "file": "S91.json",
+    "label": "S91",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:S92": {
+    "aliases": [
+      "s92"
+    ],
+    "color": "#B933AD",
+    "file": "S92.json",
+    "label": "S92",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:S93": {
+    "aliases": [
+      "s93"
+    ],
+    "color": "#EE352E",
+    "file": "S93.json",
+    "label": "S93",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:S94": {
+    "aliases": [
+      "s94"
+    ],
+    "color": "#FAA61A",
+    "file": "S94.json",
+    "label": "S94",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:S96": {
+    "aliases": [
+      "s96"
+    ],
+    "color": "#006CB7",
+    "file": "S96.json",
+    "label": "S96",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:S98": {
+    "aliases": [
+      "s98"
+    ],
+    "color": "#EE352E",
+    "file": "S98.json",
+    "label": "S98",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:SIM1": {
+    "aliases": [
+      "sim1"
+    ],
+    "color": "#00933C",
+    "file": "SIM1.json",
+    "label": "SIM1",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:SIM10": {
+    "aliases": [
+      "sim10"
+    ],
+    "color": "#00933C",
+    "file": "SIM10.json",
+    "label": "SIM10",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:SIM11": {
+    "aliases": [
+      "sim11"
+    ],
+    "color": "#00933C",
+    "file": "SIM11.json",
+    "label": "SIM11",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:SIM15": {
+    "aliases": [
+      "sim15"
+    ],
+    "color": "#00933C",
+    "file": "SIM15.json",
+    "label": "SIM15",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:SIM1C": {
+    "aliases": [
+      "sim1c"
+    ],
+    "color": "#00933C",
+    "file": "SIM1C.json",
+    "label": "SIM1C",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:SIM2": {
+    "aliases": [
+      "sim2"
+    ],
+    "color": "#00933C",
+    "file": "SIM2.json",
+    "label": "SIM2",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:SIM22": {
+    "aliases": [
+      "sim22"
+    ],
+    "color": "#00933C",
+    "file": "SIM22.json",
+    "label": "SIM22",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:SIM23": {
+    "aliases": [
+      "sim23"
+    ],
+    "color": "#00933C",
+    "file": "SIM23.json",
+    "label": "SIM23",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:SIM24": {
+    "aliases": [
+      "sim24"
+    ],
+    "color": "#00933C",
+    "file": "SIM24.json",
+    "label": "SIM24",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:SIM25": {
+    "aliases": [
+      "sim25"
+    ],
+    "color": "#00933C",
+    "file": "SIM25.json",
+    "label": "SIM25",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:SIM26": {
+    "aliases": [
+      "sim26"
+    ],
+    "color": "#00933C",
+    "file": "SIM26.json",
+    "label": "SIM26",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:SIM3": {
+    "aliases": [
+      "sim3"
+    ],
+    "color": "#00933C",
+    "file": "SIM3.json",
+    "label": "SIM3",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:SIM30": {
+    "aliases": [
+      "sim30"
+    ],
+    "color": "#00933C",
+    "file": "SIM30.json",
+    "label": "SIM30",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:SIM31": {
+    "aliases": [
+      "sim31"
+    ],
+    "color": "#00933C",
+    "file": "SIM31.json",
+    "label": "SIM31",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:SIM32": {
+    "aliases": [
+      "sim32"
+    ],
+    "color": "#00933C",
+    "file": "SIM32.json",
+    "label": "SIM32",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:SIM33": {
+    "aliases": [
+      "sim33"
+    ],
+    "color": "#00933C",
+    "file": "SIM33.json",
+    "label": "SIM33",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:SIM33C": {
+    "aliases": [
+      "sim33c"
+    ],
+    "color": "#00933C",
+    "file": "SIM33C.json",
+    "label": "SIM33C",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:SIM34": {
+    "aliases": [
+      "sim34"
+    ],
+    "color": "#00933C",
+    "file": "SIM34.json",
+    "label": "SIM34",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:SIM35": {
+    "aliases": [
+      "sim35"
+    ],
+    "color": "#00933C",
+    "file": "SIM35.json",
+    "label": "SIM35",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:SIM3C": {
+    "aliases": [
+      "sim3c"
+    ],
+    "color": "#00933C",
+    "file": "SIM3C.json",
+    "label": "SIM3C",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:SIM4": {
+    "aliases": [
+      "sim4"
+    ],
+    "color": "#00933C",
+    "file": "SIM4.json",
+    "label": "SIM4",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:SIM4C": {
+    "aliases": [
+      "sim4c"
+    ],
+    "color": "#00933C",
+    "file": "SIM4C.json",
+    "label": "SIM4C",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:SIM5": {
+    "aliases": [
+      "sim5"
+    ],
+    "color": "#00933C",
+    "file": "SIM5.json",
+    "label": "SIM5",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:SIM6": {
+    "aliases": [
+      "sim6"
+    ],
+    "color": "#00933C",
+    "file": "SIM6.json",
+    "label": "SIM6",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:SIM7": {
+    "aliases": [
+      "sim7"
+    ],
+    "color": "#00933C",
+    "file": "SIM7.json",
+    "label": "SIM7",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:SIM8": {
+    "aliases": [
+      "sim8"
+    ],
+    "color": "#00933C",
+    "file": "SIM8.json",
+    "label": "SIM8",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:SIM9": {
+    "aliases": [
+      "sim9"
+    ],
+    "color": "#00933C",
+    "file": "SIM9.json",
+    "label": "SIM9",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:X27": {
+    "aliases": [
+      "x27"
+    ],
+    "color": "#00933C",
+    "file": "X27.json",
+    "label": "X27",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:X28": {
+    "aliases": [
+      "x28"
+    ],
+    "color": "#00933C",
+    "file": "X28.json",
+    "label": "X28",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:X37": {
+    "aliases": [
+      "x37"
+    ],
+    "color": "#00933C",
+    "file": "X37.json",
+    "label": "X37",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  },
+  "bus:X38": {
+    "aliases": [
+      "x38"
+    ],
+    "color": "#00933C",
+    "file": "X38.json",
+    "label": "X38",
+    "sys": "bus",
+    "textColor": "#FFFFFF"
+  }
+}

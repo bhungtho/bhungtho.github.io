@@ -5,8 +5,8 @@ expands each trip into the stations it passed through using the agencies'
 GTFS feeds and renders the result over a map. Fully static, hosted on GitHub
 Pages at <https://bhungtho.github.io/mta/>.
 
-Covers NYC Subway, LIRR, Metro-North, NJ Transit rail and light rail, PATH,
-and NYC Ferry.
+Covers NYC Subway, MTA buses, LIRR, Metro-North, NJ Transit rail and light
+rail, PATH, and NYC Ferry.
 
 ## Logging trips
 
@@ -56,6 +56,25 @@ keeps entries consistent.
   (`Newark - World Trade Center`, `Journal Square - 33rd Street`). Writing
   just `PATH` errors and lists the seven patterns.
 - **NYC Ferry**: code or name (`ER` / `East River`, `AS` / `Astoria`).
+- **MTA buses**: the route as signed (`M15`, `Bx12`, `Q70-SBS`). An SBS
+  route also answers to its bare number when there's no local of that
+  number (`M60` is the M60-SBS), but `M15` always means the local.
+
+### Bus stops
+
+Write a bus stop as the intersection on the stop sign, cross streets in
+either order, abbreviated or spelled out: `W 34 St/8 Av`,
+`8th Avenue & West 34th Street`. Each corner and direction is its own stop
+in MTA's data; the build merges stops with the same street names into one
+intersection, and the order of your start and end picks the direction.
+
+Two things trip people up:
+
+- Many routes run on a different street each way (the M20 goes north on
+  8 Av and south on 7 Av). If a trip fails with "in that direction", the
+  route doesn't stop there going that way.
+- Leaving out a direction prefix (`34 St` for `W 34 St`) doesn't match.
+  The error lists the closest stops on the route ("Did you mean ...").
 
 ### Station names
 
@@ -100,6 +119,7 @@ build_data.py          GTFS -> web/data/*.json (run when feeds change)
 test_expansion.mjs     regression tests; run after any core or data change
 check_sheet.mjs        pipeline check for an arbitrary trips CSV
 check_classes.mjs      car class breakdown for a trips CSV
+node_data.mjs          loads web/data (including needed bus routes) for the node scripts
 .gtfs/                 feed cache (gitignored-equivalent; not deployed)
 web/
   index.html           panel markup and styles
@@ -125,9 +145,37 @@ the test and check scripts rely on.
   GTFS shapes
 - `hoods.json`, `hood_borders.json`: neighborhood fill polygons and
   dissolved borders for the map overlay
+- `served_hoods.json`: every neighborhood with a station or bus stop; the
+  neighborhood-coverage denominator
+- `bus/index.json` plus one `bus/<route>.json` per bus route (stops,
+  variants, and geometry for that route only)
 
-Ids are namespaced by system (`sub:R05`, `lirr:237`) so agency ids cannot
-collide.
+Ids are namespaced by system (`sub:R05`, `lirr:237`, `bus:401231`) so agency
+ids cannot collide.
+
+### Buses
+
+Buses are built separately from the rail feeds (`process_bus` in
+`build_data.py`) from the MTA's six bus feeds (`BUS_FEEDS`: one per borough
+plus MTA Bus Co). Differences from rail:
+
+- **Loaded per route.** The page loads `bus/index.json` (route names only)
+  and then fetches the files for just the bus routes in the sheet. The
+  whole network is about 345 routes and 8.7 MB, so it's never sent in full.
+- **Stops merge into intersections.** Stops whose names have the same words
+  (either order) within 300 m become one node, so both corners and both
+  directions of "W 34 St/8 Av" are one place. `TOKEN_MAP` in
+  `build_data.py` must stay in sync with `tokenMap` in `heatmap-core.js`.
+- **Timetables are streamed.** The build reads `stop_times.txt` one trip at
+  a time and keeps only distinct stop patterns (about 230,000 trips reduce
+  to about 1,400 patterns). Visitors never download it.
+- **Not drawn in the backdrop and no coverage bar,** since only ridden
+  routes are loaded. Bus stops do count toward neighborhoods.
+- **SBS aliases.** `M60-SBS` also answers to `M60` when no local route uses
+  that number.
+- Slices of a route's shape that come out more than 3x the straight-line
+  stop spacing (a loop the projection mis-matched) are drawn as straight
+  lines instead.
 
 Things the build handles that are easy to forget:
 
@@ -190,7 +238,7 @@ lives at `/mta/`. Deploy is a copy plus a commit:
 ```bash
 cp web/app.js web/heatmap-core.js web/index.html ../bhungtho.github.io/mta/
 cp web/car_classes.json web/name_overrides.json ../bhungtho.github.io/mta/
-cp web/data/*.json ../bhungtho.github.io/mta/data/      # only if data changed
+rsync -a --delete web/data/ ../bhungtho.github.io/mta/data/  # only if data changed
 cp build_data.py ../bhungtho.github.io/scripts/build_mta_data.py  # only if build changed
 cd ../bhungtho.github.io && git add mta scripts && git commit && git push
 ```
@@ -263,6 +311,11 @@ All in `web/app.js` unless noted.
 - NJ Transit schedule patterns are frozen at the committed zip's date.
 - Neighborhoods are NYC only; commuter stations outside the city have none
   and are excluded from the neighborhood denominator.
+- Bus trips can't cross a GTFS trip boundary. At loops like LaGuardia the
+  MTA ends one trip and starts the next (the westbound M60 starts at
+  Terminal B), so a ride that stays on through the loop has to start or end
+  at that turnaround stop.
+- Bus fleet numbers aren't classified; they show as "Bus (unclassified)".
 - NYC Ferry's feed includes its Rockaway shuttle buses as routes.
 - AirTrain Newark has no public GTFS; AirTrain JFK has a 2020 feed that was
   scoped but not added.
