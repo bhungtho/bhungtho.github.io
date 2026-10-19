@@ -96,8 +96,8 @@
     }
     label.check input { accent-color: var(--accent); }
     .filter-label { font-size: 12px; color: var(--text-muted); margin-top: 8px; }
-    #purpose-filter label.check { margin: 3px 0; font-size: 12px; }
-    #purpose-filter .dim { color: var(--text-muted); margin-left: auto; font-variant-numeric: tabular-nums; }
+    .check-filter label.check { margin: 3px 0; font-size: 12px; }
+    .check-filter .dim { color: var(--text-muted); margin-left: auto; font-variant-numeric: tabular-nums; }
     input[type="date"], select {
       width: 100%; margin-top: 2px; padding: 4px 6px; font-size: 13px;
       background: var(--bg-raised); color: var(--text); border: 1px solid var(--border); border-radius: 4px;
@@ -212,7 +212,8 @@
       <details open><summary>Filters</summary>
         <label>From <input type="date" id="date-from" /></label>
         <label>To <input type="date" id="date-to" /></label>
-        <div id="purpose-filter"></div>
+        <div id="system-filter" class="check-filter"></div>
+        <div id="purpose-filter" class="check-filter"></div>
       </details>
       <details open><summary>Appearance</summary>
         <label>Map theme

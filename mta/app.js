@@ -271,10 +271,10 @@ async function main() {
       data: {
         type: "FeatureCollection",
         // Buses are left out: 300 routes would bury the rail network.
-        features: Object.entries(segments).filter(([k]) => !k.startsWith("bus:")).map(([, coords]) => ({
+        features: Object.entries(segments).filter(([k]) => !k.startsWith("bus:")).map(([k, coords]) => ({
           type: "Feature",
           geometry: { type: "LineString", coordinates: coords },
-          properties: {},
+          properties: { sys: k.split(":")[0] }, // for the Systems filter
         })),
       },
     });
@@ -520,12 +520,15 @@ async function main() {
       }
     };
 
+    const activeSystems = setupSystemFilter(expanded, segments, () => refresh());
     const activePurposes = setupPurposeFilter(expanded, () => refresh());
     const refresh = (fit = true) => {
       const from = fromEl.value || "0000-00-00";
       const to = toEl.value || "9999-99-99";
+      map.setFilter("network", ["in", ["get", "sys"], ["literal", [...activeSystems]]]);
       render(expanded.filter((t) =>
-        t.date >= from && t.date <= to && activePurposes.has(purposeOf(t))), fit);
+        t.date >= from && t.date <= to && activeSystems.has(t.sys) &&
+        activePurposes.has(purposeOf(t))), fit);
     };
 
     fromEl.addEventListener("change", () => refresh());
@@ -680,16 +683,38 @@ function setupPurposeFilter(expanded, onChange) {
       .sort((a, b) => counts.get(b) - counts.get(a)),
     ...(counts.has(UNLABELED) ? [UNLABELED] : []),
   ];
-  el.innerHTML = `<div class="filter-label">Purpose</div>` + order.map((p) =>
-    `<label class="check"><input type="checkbox" value="${escapeHtml(p)}" checked /> ` +
-    `${escapeHtml(p)} <span class="dim">${counts.get(p)}</span></label>`).join("");
+  checkboxGroup(el, "Purpose", order.map((p) => [p, p, counts.get(p)]), active, onChange);
+  return active;
+}
+
+// System checkboxes (Subway, Bus, LIRR, ...), all on by default. Lists every
+// system in the data, ridden or not, since unticking one also hides its
+// unridden track in the backdrop.
+const SYSTEM_ORDER = ["sub", "bus", "lirr", "mnr", "njt", "path", "fer"];
+function setupSystemFilter(expanded, segments, onChange) {
+  const counts = new Map();
+  for (const t of expanded) counts.set(t.sys, (counts.get(t.sys) || 0) + 1);
+  const present = new Set([...Object.keys(segments).map((k) => k.split(":")[0]), ...counts.keys()]);
+  const rank = (s) => (SYSTEM_ORDER.includes(s) ? SYSTEM_ORDER.indexOf(s) : SYSTEM_ORDER.length);
+  const systems = [...present].sort((a, b) => rank(a) - rank(b) || a.localeCompare(b));
+  const active = new Set(systems);
+  checkboxGroup(document.getElementById("system-filter"), "Systems",
+    systems.map((s) => [s, SYSTEM_NAMES[s] ?? s, counts.get(s) || 0]), active, onChange);
+  return active;
+}
+
+// Renders [value, label, count] rows as checkboxes into el, keeping `active`
+// in sync and calling onChange after each toggle.
+function checkboxGroup(el, title, items, active, onChange) {
+  el.innerHTML = `<div class="filter-label">${title}</div>` + items.map(([value, label, n]) =>
+    `<label class="check"><input type="checkbox" value="${escapeHtml(value)}" checked /> ` +
+    `${escapeHtml(label)} <span class="dim">${n}</span></label>`).join("");
   el.addEventListener("change", (e) => {
     if (e.target.type !== "checkbox") return;
     if (e.target.checked) active.add(e.target.value);
     else active.delete(e.target.value);
     onChange();
   });
-  return active;
 }
 
 function renderTotals(filtered, segCounts, stationStats, distKm, longestKm, byPurpose) {

@@ -29,6 +29,13 @@ can keep notes in the sheet. Without a header row, extra columns fall back
 to being classified by content (numeric is a car number, anything else a
 via station), and purpose isn't available.
 
+### Filters
+
+The panel's Filters section narrows the map and every stat (except the
+all-time coverage bars) by date range, system (Subway, Bus, LIRR, ...), and
+purpose. Unticking a system also hides its unridden track in the dashed
+backdrop. Replay always plays every trip and ignores the filters.
+
 ### Purpose
 
 Tag each leg with the purpose of the whole journey (both legs of an N-to-7
