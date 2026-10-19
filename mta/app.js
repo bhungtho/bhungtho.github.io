@@ -244,7 +244,7 @@ async function main() {
   renderErrors(parseErrors, tripErrors, purposeWarnings);
   renderCoverage(expanded, segments, stations);
   renderHoodCoverage(expanded, stations, servedHoods);
-  setupRawTable(trips, expanded, tripErrors);
+  setupRawTable(trips, expanded, tripErrors, segLen);
 
   const dates = expanded.map((t) => t.date).sort();
   const fromEl = document.getElementById("date-from");
@@ -981,7 +981,7 @@ function renderTopHoods(stationStats, stations) {
     .join("");
 }
 
-function setupRawTable(trips, expanded, tripErrors) {
+function setupRawTable(trips, expanded, tripErrors, segLen) {
   const esc = escapeHtml;
   const errByTrip = new Map(tripErrors.map((e) => [e.trip, e.error]));
   const queue = [...expanded]; // same order as trips, minus errored rows
@@ -989,7 +989,12 @@ function setupRawTable(trips, expanded, tripErrors) {
     const err = errByTrip.get(t);
     const status = err
       ? `<span class="bad">error</span>`
-      : `<span class="ok">${queue.shift().path.length} stops</span>`;
+      : (() => {
+        // Same per-segment lengths as the Distance ridden total.
+        const ex = queue.shift();
+        const km = ex.hops.reduce((d, [a, b]) => d + (segLen.get(segKey(a, b)) || 0), 0);
+        return `<span class="ok">${ex.path.length} stops \u00b7 ${km.toFixed(1)} km</span>`;
+      })();
     let html = `<tr><td>${esc(t.date)}</td><td>${esc(t.start)}</td><td>${esc(t.end)}</td>` +
       `<td>${esc(t.route)}</td><td>${esc(t.via ?? "")}</td>` +
       `<td class="num">${esc(t.car ?? "")}</td><td>${esc(t.purpose ?? "")}</td>` +
