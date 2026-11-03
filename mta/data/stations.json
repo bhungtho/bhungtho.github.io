@@ -27,13 +27,6 @@
     "name": "Atlantic Ave/BBP Pier 6",
     "sys": "fer"
   },
-  "fer:111": {
-    "hood": "The Battery-Governors Island-Ellis Island-Liberty Island",
-    "lat": 40.68664,
-    "lon": -74.016482,
-    "name": "Gov. Island/Yankee Pier",
-    "sys": "fer"
-  },
   "fer:112": {
     "hood": "Soundview-Clason Point",
     "lat": 40.804202,
@@ -312,6 +305,13 @@
     "lat": 40.596245,
     "lon": -73.76914,
     "name": "Beach Channel Dr/Beach 36th Street",
+    "sys": "fer"
+  },
+  "fer:65": {
+    "hood": "The Battery-Governors Island-Ellis Island-Liberty Island",
+    "lat": 40.691412,
+    "lon": -74.012327,
+    "name": "Governors Island",
     "sys": "fer"
   },
   "fer:8": {
@@ -5974,7 +5974,7 @@
     "hood": "Jamaica",
     "lat": 40.702147,
     "lon": -73.801109,
-    "name": "Jamaica Center-Parsons/Archer",
+    "name": "Jamaica Center-York College",
     "sys": "sub"
   },
   "sub:G06": {
